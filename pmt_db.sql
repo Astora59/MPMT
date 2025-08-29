@@ -7,7 +7,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 -- ====================================
 
 CREATE TABLE users (
-    users_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    users_id UUID PRIMARY KEY DEFAULT gen_random_uuid(), -- clé primaire qu'on utilise dans d'autres tables, gen_randim_uuid() pour générer un UUID
     usersname VARCHAR(32) UNIQUE NOT NULL,
     users_email VARCHAR(50) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL
@@ -19,7 +19,7 @@ CREATE TABLE users (
 -- ====================================
 
 CREATE TABLE project (
-    project_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    project_id UUID PRIMARY KEY DEFAULT gen_random_uuid(), -- clé primaire qu'on utilise dans d'autres tables   
     project_name VARCHAR(50) NOT NULL,
     project_description TEXT,
     creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
