@@ -10,7 +10,7 @@ Le projet est réalisé dans le cadre du Titre RNCP Niveau 7 – Expert en Ingé
 
 - Angular pour le front-end
 - Java avec Spring Boot pour le back-end
-- MySQL comme base de données relationnelle
+- PostGreSQL comme base de données relationnelle
 - Git comme système de contrôle de versions
 
 ### IDE utilisés
