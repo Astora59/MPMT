@@ -9,7 +9,7 @@ import java.util.UUID;
 public class Users {
 
 
-    @Id
+    @Id //let us know it's our primary key
     @GeneratedValue
     @Column()
     private UUID users_id;
