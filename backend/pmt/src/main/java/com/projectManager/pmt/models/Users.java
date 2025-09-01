@@ -11,14 +11,16 @@ public class Users {
 
     @Id //let us know it's our primary key
     @GeneratedValue
-    @Column()
+    @Column(name = "users_id", nullable = false)
     private UUID users_id;
 
-
+    @Column(name = "usersname", nullable = false)
     private String username;
 
+    @Column(name = "users_email", nullable = false)
     private String email;
 
+    @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
     //users_id getter and setter
