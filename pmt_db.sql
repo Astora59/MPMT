@@ -13,7 +13,7 @@ CREATE TABLE users (
     password_hash VARCHAR(255) NOT NULL
 ); 
 
-
+    
 -- ====================================
 -- Table : project
 -- ====================================

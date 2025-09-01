@@ -1,5 +1,6 @@
 package com.projectManager.pmt.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -17,6 +18,8 @@ public class Users {
     @Column(name = "usersname", nullable = false)
     private String username;
 
+    @OneToMany(mappedBy = "admin")
+    @JsonManagedReference
     @Column(name = "users_email", nullable = false)
     private String email;
 
