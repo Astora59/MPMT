@@ -1,9 +1,14 @@
 package com.projectManager.pmt.repositories;
 
-import org.springframework.data.repository.CrudRepository;
+import com.projectManager.pmt.models.Users;
 
-public class UsersRepository extends CrudRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
 
-    
+
+import java.util.UUID;
+
+public interface UsersRepository extends JpaRepository<Users, UUID> {
+
+
 
 }
