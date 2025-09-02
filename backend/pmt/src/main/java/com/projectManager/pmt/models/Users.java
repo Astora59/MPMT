@@ -18,8 +18,6 @@ public class Users {
     @Column(name = "usersname", nullable = false)
     private String username;
 
-    @OneToMany(mappedBy = "admin")
-    @JsonManagedReference
     @Column(name = "users_email", nullable = false)
     private String email;
 
