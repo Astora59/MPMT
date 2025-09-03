@@ -1,31 +1,24 @@
 package com.projectManager.pmt.controllers;
 
 
+import com.projectManager.pmt.dto.RegisterRequest;
 import com.projectManager.pmt.models.Users;
 import com.projectManager.pmt.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.UUID;
-
-
 @RestController
-@RequestMapping("/users")
-public class UsersController {
+@RequestMapping("/auth")
+public class AuthController {
 
     @Autowired
     private UsersService usersService;
 
-
-    @GetMapping
-    public List<Users> findAll() {
-        return usersService.findAll();
+    @PostMapping("/register")
+    public Users register(@RequestBody RegisterRequest request) {
+        return usersService.registerUser(request);
     }
-
-
-
 }

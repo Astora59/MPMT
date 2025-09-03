@@ -22,10 +22,10 @@ public class Project {
 
     private LocalDateTime project_creation_date;
 
-    @ManyToOne
-    @JoinColumn(name = "users_email")
-    @JsonBackReference
+    @Column(name = "users_email", nullable = false, length = 50)
     private String email;
+
+
 
 
 
