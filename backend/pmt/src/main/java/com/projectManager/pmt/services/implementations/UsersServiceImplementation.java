@@ -1,5 +1,7 @@
 package com.projectManager.pmt.services.implementations;
 
+import com.projectManager.pmt.dto.LoginRequest;
+import com.projectManager.pmt.dto.LoginResponse;
 import com.projectManager.pmt.dto.RegisterRequest;
 import com.projectManager.pmt.models.Users;
 import com.projectManager.pmt.repositories.UsersRepository;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsersServiceImplementation implements UsersService {
@@ -35,4 +38,17 @@ public class UsersServiceImplementation implements UsersService {
 
         return usersRepository.save(user);
     }
+
+    @Override
+    public LoginResponse login(LoginRequest request) {
+        Optional<Users> user = usersRepository.findByEmail(request.getEmail());
+
+        if (user.isPresent() && user.get().getPasswordHash().equals(request.getPassword())) {
+            return new LoginResponse("Connexion réussie, bienvenue " + user.get().getUsername());
+        } else {
+            return new LoginResponse("Échec de connexion : email ou mot de passe incorrect");
+        }
+    }
+
+
 }

@@ -1,20 +1,19 @@
 package com.projectManager.pmt.controllers;
 
 
+import com.projectManager.pmt.dto.LoginRequest;
+import com.projectManager.pmt.dto.LoginResponse;
 import com.projectManager.pmt.models.Users;
 import com.projectManager.pmt.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/auth")
 public class UsersController {
 
     @Autowired
@@ -26,6 +25,9 @@ public class UsersController {
         return usersService.findAll();
     }
 
-
+    @PostMapping("/login")
+    public LoginResponse login(@RequestBody LoginRequest request) {
+        return usersService.login(request);
+    }
 
 }
