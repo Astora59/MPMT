@@ -1,6 +1,5 @@
 package com.projectManager.pmt.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -29,7 +28,7 @@ public class Users {
         return users_id;
     }
 
-    public void setUsers_id(UUID users_id) {
+    public void setUsers_id() {
         this.users_id = users_id;
     }
 
