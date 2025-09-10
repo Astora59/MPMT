@@ -50,7 +50,6 @@ CREATE TABLE role (
 
 CREATE TABLE task (
     task_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    task_name VARCHAR(50) NOT NULL,
     task_title VARCHAR(32) NOT NULL,
     task_description TEXT,
     task_deadline TIMESTAMP,

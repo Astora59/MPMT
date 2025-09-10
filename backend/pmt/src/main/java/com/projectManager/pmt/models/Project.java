@@ -26,6 +26,7 @@ public class Project {
     @Column(name = "project_admin", nullable = false)
     private UUID project_admin;
 
+
     @Column(name = "users_email", nullable = false, length = 50)
     private String email;
 

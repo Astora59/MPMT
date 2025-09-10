@@ -2,6 +2,8 @@ package com.projectManager.pmt.models;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -23,12 +25,14 @@ public class Users {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
+
+
     //users_id getter and setter
     public UUID getUsers_id() {
         return users_id;
     }
 
-    public void setUsers_id() {
+    public void setUsers_id(UUID users_id) {
         this.users_id = users_id;
     }
 
