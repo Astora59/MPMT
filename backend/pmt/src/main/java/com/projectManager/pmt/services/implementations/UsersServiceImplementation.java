@@ -5,6 +5,7 @@ import com.projectManager.pmt.dto.LoginResponse;
 import com.projectManager.pmt.dto.RegisterRequest;
 import com.projectManager.pmt.models.Users;
 import com.projectManager.pmt.repositories.UsersRepository;
+import com.projectManager.pmt.security.JwtUtil;
 import com.projectManager.pmt.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,9 @@ public class UsersServiceImplementation implements UsersService {
         Optional<Users> user = usersRepository.findByEmail(request.getEmail());
 
         if (user.isPresent() && user.get().getPasswordHash().equals(request.getPassword())) {
-            return new LoginResponse("Connexion réussie, bienvenue " + user.get().getUsername());
+            // Générer un JWT pour cet utilisateur
+            String token = JwtUtil.generateToken(user.get().getEmail());
+            return new LoginResponse(token); //générer un token et renvoyer le token, java jwT
         } else {
             return new LoginResponse("Échec de connexion : email ou mot de passe incorrect");
         }

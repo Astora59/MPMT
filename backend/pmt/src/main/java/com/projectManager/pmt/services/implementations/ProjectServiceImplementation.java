@@ -49,11 +49,18 @@ public class ProjectServiceImplementation implements ProjectService {
         Project savedProject = projectRepository.save(project);
 
 
-        Role adminRole = new Role();
-        adminRole.setProject(savedProject);
-        adminRole.setUser(adminUser);
-        adminRole.setRoleName("admin"); // rôle admin
-        roleRepository.save(adminRole);
+        Optional<Role> existingRole = roleRepository.findRoleByUserAndProject(
+                adminUser.getUsers_id(),
+                savedProject.getProject_id()
+        );
+
+        if (existingRole.isEmpty()) {
+            Role adminRole = new Role();
+            adminRole.setProject(savedProject);
+            adminRole.setUser(adminUser);
+            adminRole.setRoleName("admin"); // rôle admin
+            roleRepository.save(adminRole);
+        }
 
         return savedProject;
     }

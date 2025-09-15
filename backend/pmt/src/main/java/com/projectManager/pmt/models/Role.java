@@ -19,12 +19,12 @@ public class Role {
     // Relation vers l'utilisateur
     @ManyToOne
     @JoinColumn(name = "users_id", nullable = false)
-    private Users user;   //
+    private Users user;
 
     // Relation vers le projet
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
-    private Project project; //
+    private Project project;
 
     // Getters et Setters
     public UUID getRole_id() {

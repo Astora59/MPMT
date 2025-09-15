@@ -1,15 +1,17 @@
 package com.projectManager.pmt.dto;
 
 public class LoginResponse {
+    private String token;
 
-    private String message;
-
-    public LoginResponse(String message) {
-        this.message = message;
+    public LoginResponse(String token) {
+        this.token = token;
     }
 
-    // Getter
-    public String getMessage() {
-        return message;
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

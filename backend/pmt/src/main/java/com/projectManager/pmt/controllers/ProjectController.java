@@ -20,7 +20,7 @@ public class ProjectController {
 
     @PostMapping("/create")
     public ResponseEntity<Project> createProject(@RequestBody ProjectRequest projectRequest) {
-        // On passe directement l'email fourni dans le DTO comme "admin"
+
         Project newProject = projectService.createProject(projectRequest);
         return ResponseEntity.ok(newProject);
     }
