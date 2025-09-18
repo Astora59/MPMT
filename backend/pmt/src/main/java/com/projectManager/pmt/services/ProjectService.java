@@ -9,8 +9,8 @@ import java.util.UUID;
 
 public interface ProjectService {
 
-    Project createProject(ProjectRequest projectRequest);
+    Project createProject(ProjectRequest projectRequest, String email);
 
-
+    Project inviteUserToProject(UUID project_id, String adminEmail, InviteRequest inviteRequest);
 //    void inviteUser(UUID projectId, String email, String roleName);
 }

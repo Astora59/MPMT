@@ -31,10 +31,10 @@ public class ProjectServiceImplementation implements ProjectService {
 
 
     @Override
-    public Project createProject(ProjectRequest projectRequest) {
+    public Project createProject(ProjectRequest projectRequest, String email) {
 
-        Users adminUser = usersRepository.findByEmail(projectRequest.getUserEmail())
-                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé avec l’email : " + projectRequest.getUserEmail()));
+        Users adminUser = usersRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé avec l’email : " + email));
 
 
         // Créer un nouveau projet
@@ -65,28 +65,43 @@ public class ProjectServiceImplementation implements ProjectService {
         return savedProject;
     }
 
-//    public void inviteUser(UUID projectId, String email, String roleName) {
-//
-//
-//        // 1. Récupérer le projet
-//        Project project = projectRepository.findById(projectId)
-//                .orElseThrow(() -> new RuntimeException("Projet introuvable"));
-//
-//        // 2. Récupérer l'utilisateur
-//        Users user = usersRepository.findByEmail(email)
-//                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé."));
-//
-//        // 3. Vérifier s’il a déjà un rôle sur ce projet
-//        if (roleRepository.findByUser_Users_idAndProject_Project_id(user.getUsers_id(), project.getProject_id()).isPresent()) {
-//            throw new RuntimeException("Utilisateur déjà membre du projet");
-//        }
-//
-//        // 4. Créer le rôle
-//        Role role = new Role();
-//        role.setProject(project);
-//        role.setUser(user);
-//        role.setRoleName(roleName != null ? roleName : "member"); // par défaut member
-//
-//        roleRepository.save(role);
-//    }
+    @Override
+    public Project inviteUserToProject(UUID project_id, String adminEmail, InviteRequest inviteRequest) {
+        // Vérifier que le projet existe
+        Project project = projectRepository.findById(project_id)
+                .orElseThrow(() -> new RuntimeException("Projet non trouvé"));
+
+        // Vérifier que l’utilisateur qui invite est bien l’admin
+        Users adminUser = usersRepository.findByEmail(adminEmail)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé avec l’email : " + adminEmail));
+
+
+        if (!project.getProject_admin().equals(adminUser.getUsers_id())) {
+            throw new RuntimeException("Seul l’admin peut inviter des utilisateurs dans ce projet");
+        }
+
+
+        // Chercher l’utilisateur invité
+        Users invitedUser = usersRepository.findByEmail(inviteRequest.getEmail())
+                .orElseThrow(() -> new RuntimeException("Utilisateur invité non trouvé"));
+
+
+        // Créer un rôle (member par défaut si pas spécifié)
+        Role role = new Role();
+        role.setProject(project);
+        role.setUser(invitedUser);
+        role.setRoleName(
+                (inviteRequest.getRoleName() == null || inviteRequest.getRoleName().isEmpty())
+                        ? "member"
+                        : inviteRequest.getRoleName()
+        );
+
+        roleRepository.save(role);
+
+        return project;
+
+    }
+
+
+
 }
