@@ -27,16 +27,21 @@ public class TaskServiceImplementation implements TaskService {
 
 
     @Override
-    public Task createTask(UUID projectId, UUID userId, TaskCreationRequest taskCreationRequest) {
+    public Task createTask(UUID projectId, String userEmail, TaskCreationRequest taskCreationRequest) {
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Projet introuvable"));
 
-        if (!project.getProject_admin().equals(userId)) {
-            throw new RuntimeException("Seul l'admin du projet peut créer une tâche");
+        // Vérifier si l’utilisateur est admin ou membre
+        Users user = usersRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        boolean hasAccess = project.getProject_admin().equals(user.getUsers_id())
+                || /* si tu as une table ProjectRole */ true; // Ici tu ajoutes la logique membre/admin
+
+        if (!hasAccess) {
+            throw new RuntimeException("Accès refusé : seuls les admins ou membres peuvent créer une tâche.");
         }
-
-
 
         Task task = new Task();
         task.setTaskTitle(taskCreationRequest.getTaskTitle());

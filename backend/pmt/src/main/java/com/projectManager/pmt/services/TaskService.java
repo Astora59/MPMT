@@ -7,5 +7,5 @@ import org.springframework.http.ResponseEntity;
 import java.util.UUID;
 
 public interface TaskService {
-    Task createTask(UUID projectId,UUID userId, TaskCreationRequest taskCreationRequest);
+    Task createTask(UUID projectId,String userEmail, TaskCreationRequest taskCreationRequest);
 }

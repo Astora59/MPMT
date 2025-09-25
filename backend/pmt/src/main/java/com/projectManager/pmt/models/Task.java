@@ -34,9 +34,16 @@ public class Task {
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
+    @Column(name = "created_by", nullable = false)
+    private String createdBy; // email de l’utilisateur qui a créé la tâche
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
 
-
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
     public UUID getTaskId() {
         return taskId;

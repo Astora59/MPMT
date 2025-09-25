@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "role", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"users_id", "project_id"})
-})
+@Table(name = "role")
 public class Role {
 
     @Id

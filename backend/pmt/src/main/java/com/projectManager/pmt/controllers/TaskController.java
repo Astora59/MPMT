@@ -6,6 +6,8 @@ import com.projectManager.pmt.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -20,9 +22,9 @@ public class TaskController {
 
 
     @PostMapping("/{projectId}/tasks")
-    public ResponseEntity<Task> createTask(@PathVariable UUID projectId,@RequestParam UUID userId, @RequestBody TaskCreationRequest taskCreationRequest) {
+    public ResponseEntity<Task> createTask(@PathVariable UUID projectId,@RequestBody TaskCreationRequest taskCreationRequest, @AuthenticationPrincipal UserDetails userDetails) {
 
-        Task task = taskService.createTask(projectId, userId, taskCreationRequest);
+        Task task = taskService.createTask(projectId, userDetails.getUsername(), taskCreationRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(task);
 
 

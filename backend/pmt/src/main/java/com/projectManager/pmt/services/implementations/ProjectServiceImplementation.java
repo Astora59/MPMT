@@ -1,5 +1,6 @@
 package com.projectManager.pmt.services.implementations;
 
+import com.projectManager.pmt.dto.AssignRoleRequest;
 import com.projectManager.pmt.dto.InviteRequest;
 import com.projectManager.pmt.dto.ProjectRequest;
 import com.projectManager.pmt.models.Project;
@@ -100,6 +101,50 @@ public class ProjectServiceImplementation implements ProjectService {
 
         return project;
 
+    }
+
+
+    @Override
+    public Project updateUserRole(UUID projectId, String adminEmail, AssignRoleRequest request) {
+        // Vérifier que le projet existe
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Projet non trouvé"));
+
+        // Vérifier que l’adminEmail correspond bien à un admin du projet
+        Users adminUser = usersRepository.findByEmail(adminEmail)
+                .orElseThrow(() -> new RuntimeException("Utilisateur admin introuvable"));
+
+        Role adminRole = roleRepository.findRoleByUserAndProject(adminUser.getUsers_id(), project.getProject_id())
+                .orElseThrow(() -> new RuntimeException("Rôle introuvable"));
+
+        if (!"admin".equals(adminRole.getRoleName())) {
+            throw new RuntimeException("Vous n’avez pas les droits pour attribuer des rôles dans ce projet");
+        }
+
+        // Vérifier que l’utilisateur cible existe
+        Users targetUser = usersRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("Utilisateur cible introuvable"));
+
+        // Vérifier si un rôle existe déjà pour cet utilisateur dans ce projet
+        Optional<Role> existingRole = roleRepository.findRoleByUserAndProject(
+                targetUser.getUsers_id(), project.getProject_id()
+        );
+
+        Role role;
+        if (existingRole.isPresent()) {
+            // mettre à jour le rôle
+            role = existingRole.get();
+            role.setRoleName(request.getRoleName());
+        } else {
+            // créer un nouveau rôle
+            role = new Role();
+            role.setProject(project);
+            role.setUser(targetUser);
+            role.setRoleName(request.getRoleName() != null ? request.getRoleName() : "member");
+        }
+
+        roleRepository.save(role);
+        return project;
     }
 
 

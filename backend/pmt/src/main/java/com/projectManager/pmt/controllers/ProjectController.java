@@ -1,5 +1,6 @@
 package com.projectManager.pmt.controllers;
 
+import com.projectManager.pmt.dto.AssignRoleRequest;
 import com.projectManager.pmt.dto.InviteRequest;
 import com.projectManager.pmt.dto.ProjectRequest;
 import com.projectManager.pmt.models.Project;
@@ -42,5 +43,14 @@ public class ProjectController {
         projectService.inviteUserToProject(projectId, email, inviteRequest);
         return "Utilisateur invité avec succès";
     }
+
+    @PutMapping("/{projectId}/role")
+    public String updateUserRole(@PathVariable UUID projectId,
+                                 @RequestBody AssignRoleRequest request,
+                                 @AuthenticationPrincipal String adminEmail) {
+        projectService.updateUserRole(projectId, adminEmail, request);
+        return "Rôle mis à jour avec succès pour " + request.getEmail();
+    }
+
 
 }
