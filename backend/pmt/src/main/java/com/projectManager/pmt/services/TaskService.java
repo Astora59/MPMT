@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface TaskService {
     Task createTask(UUID projectId,String userEmail, TaskCreationRequest taskCreationRequest);
+
+    Task assignTaskToUser(UUID projectId, UUID taskId, String currentUserEmail, String targetUserEmail);
 }

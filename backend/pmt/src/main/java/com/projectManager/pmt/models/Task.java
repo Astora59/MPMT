@@ -34,15 +34,24 @@ public class Task {
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
-    @Column(name = "created_by", nullable = false)
-    private String createdBy; // email de l’utilisateur qui a créé la tâche
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "created_by", referencedColumnName = "users_id")
+    private Users createdBy; // email de l’utilisateur qui a créé la tâche
 
-    public String getCreatedBy() {
-        return createdBy;
+    @ManyToOne
+    @JoinColumn(name = "assigned_user_id")
+    private Users assignedUser;
+
+    public Users getAssignedUser() {
+        return assignedUser;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setAssignedUser(Users assignedUser) {
+        this.assignedUser = assignedUser;
+    }
+
+    public Users getCreatedBy() {
+        return createdBy;
     }
 
     public UUID getTaskId() {
@@ -122,5 +131,7 @@ public class Task {
         this.project = project;
     }
 
-
+    public void setCreatedBy(Users createdBy) {
+        this.createdBy = createdBy;
+    }
 }

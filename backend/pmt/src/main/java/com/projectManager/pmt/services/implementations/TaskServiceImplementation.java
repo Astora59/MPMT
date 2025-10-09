@@ -28,6 +28,8 @@ public class TaskServiceImplementation implements TaskService {
 
     @Override
     public Task createTask(UUID projectId, String userEmail, TaskCreationRequest taskCreationRequest) {
+        System.out.println("Email extrait du token = " + userEmail);
+
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Projet introuvable"));
@@ -50,6 +52,47 @@ public class TaskServiceImplementation implements TaskService {
         task.setTaskStatus(taskCreationRequest.getTaskStatus());
         task.setTaskPriority(taskCreationRequest.getTaskPriority());
         task.setProject(project);
+        task.setCreatedBy(user);
+
+        return taskRepository.save(task);
+    }
+
+    @Override
+    public Task assignTaskToUser(UUID projectId, UUID taskId, String currentUserEmail, String targetUserEmail) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Projet introuvable"));
+
+        Users currentUser = usersRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new RuntimeException("Utilisateur actuel introuvable"));
+
+        Users targetUser = usersRepository.findByEmail(targetUserEmail)
+                .orElseThrow(() -> new RuntimeException("Utilisateur cible introuvable"));
+
+        // Vérifie si currentUser est admin ou membre
+        boolean hasAccess = roleRepository.findRoleByUserAndProject(currentUser.getUsers_id(), project.getProject_id())
+                .map(role -> role.getRoleName().equals("admin") || role.getRoleName().equals("member"))
+                .orElse(false);
+
+        if (!hasAccess) {
+            throw new RuntimeException("Accès refusé : seuls les admins ou membres peuvent assigner une tâche.");
+        }
+
+        // Vérifie que targetUser appartient au projet
+        boolean targetIsMember = roleRepository.findRoleByUserAndProject(targetUser.getUsers_id(), project.getProject_id()).isPresent();
+        if (!targetIsMember) {
+            throw new RuntimeException("L’utilisateur cible n’est pas membre du projet.");
+        }
+
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Tâche introuvable"));
+
+        // Vérifie que la tâche appartient bien au projet
+        if (!task.getProject().getProject_id().equals(projectId)) {
+            throw new RuntimeException("Cette tâche n'appartient pas au projet.");
+        }
+
+        // Assigne la tâche
+        task.setAssignedUser(targetUser);
 
         return taskRepository.save(task);
     }
