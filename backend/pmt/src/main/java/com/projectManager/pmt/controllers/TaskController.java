@@ -2,6 +2,7 @@ package com.projectManager.pmt.controllers;
 
 import com.projectManager.pmt.dto.AssignTaskRequest;
 import com.projectManager.pmt.dto.TaskCreationRequest;
+import com.projectManager.pmt.dto.TaskUpdateRequest;
 import com.projectManager.pmt.models.Task;
 import com.projectManager.pmt.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,5 +63,31 @@ public class TaskController {
 
         return ResponseEntity.ok(updatedTask);
     }
+
+
+    @PutMapping("/{projectId}/tasks/{taskId}")
+    public ResponseEntity<Task> updateTask(
+            @PathVariable UUID projectId,
+            @PathVariable UUID taskId,
+            @RequestBody TaskUpdateRequest updateRequest
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = (String) authentication.getPrincipal();
+
+        Task updatedTask = taskService.updateTask(projectId, taskId, email, updateRequest);
+        return ResponseEntity.ok(updatedTask);
+    }
+
+    @GetMapping("/{projectId}/tasks/{taskId}")
+    public ResponseEntity<Task> getTaskById(
+            @PathVariable UUID projectId,
+            @PathVariable UUID taskId,
+            @AuthenticationPrincipal String userEmail
+    ) {
+        Task task = taskService.getTaskById(projectId, taskId, userEmail);
+        return ResponseEntity.ok(task);
+    }
+
+
 
 }

@@ -1,6 +1,7 @@
 package com.projectManager.pmt.services.implementations;
 
 import com.projectManager.pmt.dto.TaskCreationRequest;
+import com.projectManager.pmt.dto.TaskUpdateRequest;
 import com.projectManager.pmt.models.Project;
 import com.projectManager.pmt.models.Role;
 import com.projectManager.pmt.models.Task;
@@ -95,6 +96,85 @@ public class TaskServiceImplementation implements TaskService {
         task.setAssignedUser(targetUser);
 
         return taskRepository.save(task);
+    }
+
+    @Override
+    public Task updateTask(UUID projectId, UUID taskId, String userEmail, TaskUpdateRequest updateRequest) {
+
+        // Récupère le projet
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Projet introuvable"));
+
+        // Récupère l’utilisateur
+        Users user = usersRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        // Vérifie si l’utilisateur est admin ou membre du projet
+        boolean hasAccess = project.getProject_admin().equals(user.getUsers_id())
+                || roleRepository.findRoleByUserAndProject(user.getUsers_id(), projectId)
+                .map(role -> role.getRoleName().equalsIgnoreCase("member"))
+                .orElse(false);
+
+        if (!hasAccess) {
+            throw new RuntimeException("Accès refusé : seuls les admins ou membres peuvent modifier une tâche.");
+        }
+
+        // Récupère la tâche
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Tâche introuvable"));
+
+        // Vérifie que la tâche appartient bien au projet
+        if (!task.getProject().getProject_id().equals(projectId)) {
+            throw new RuntimeException("Cette tâche n'appartient pas à ce projet.");
+        }
+
+        // Met à jour les champs si présents
+        if (updateRequest.getTaskTitle() != null) task.setTaskTitle(updateRequest.getTaskTitle());
+        if (updateRequest.getTaskDescription() != null) task.setTaskDescription(updateRequest.getTaskDescription());
+        if (updateRequest.getTaskStatus() != null) task.setTaskStatus(updateRequest.getTaskStatus());
+        if (updateRequest.getTaskPriority() != null) task.setTaskPriority(updateRequest.getTaskPriority());
+        if (updateRequest.getTaskDeadline() != null) task.setTaskDeadline(updateRequest.getTaskDeadline());
+
+        return taskRepository.save(task);
+
+
+    }
+
+    @Override
+    public Task getTaskById(UUID projectId, UUID taskId, String userEmail) {
+
+        // Récupération du projet
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Projet introuvable"));
+
+        // Récupération de l’utilisateur
+        Users user = usersRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        // Vérifie si l’utilisateur a accès au projet (admin, member ou observer)
+        boolean hasAccess = project.getProject_admin().equals(user.getUsers_id())
+                || roleRepository.findRoleByUserAndProject(user.getUsers_id(), projectId)
+                .map(role -> {
+                    String roleName = role.getRoleName().toLowerCase();
+                    return roleName.equals("member") || roleName.equals("observer");
+                })
+                .orElse(false);
+
+        if (!hasAccess) {
+            throw new RuntimeException("Accès refusé : vous n'avez pas les droits pour voir cette tâche.");
+        }
+
+        // Récupération de la tâche
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Tâche introuvable"));
+
+        // Vérifie que la tâche appartient bien au projet demandé
+        if (!task.getProject().getProject_id().equals(projectId)) {
+            throw new RuntimeException("Cette tâche n'appartient pas à ce projet.");
+        }
+
+        return task;
+
     }
 
 
