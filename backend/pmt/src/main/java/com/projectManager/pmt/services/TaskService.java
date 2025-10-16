@@ -5,6 +5,7 @@ import com.projectManager.pmt.dto.TaskUpdateRequest;
 import com.projectManager.pmt.models.Task;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface TaskService {
@@ -15,4 +16,7 @@ public interface TaskService {
     Task updateTask(UUID projectId, UUID taskId, String userEmail, TaskUpdateRequest updateRequest);
 
     Task getTaskById(UUID projectId, UUID taskId, String userEmail);
+
+    List<Task> getTasksByStatus(UUID projectId, String userEmail, String status);
+
 }

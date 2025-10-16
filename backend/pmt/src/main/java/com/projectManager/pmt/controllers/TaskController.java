@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -88,6 +89,18 @@ public class TaskController {
         return ResponseEntity.ok(task);
     }
 
+
+    @GetMapping("/{projectId}/tasks/status/{status}")
+    public ResponseEntity<List<Task>> getTasksByStatus(
+            @PathVariable UUID projectId,
+            @PathVariable String status
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = (String) authentication.getPrincipal();
+
+        List<Task> tasks = taskService.getTasksByStatus(projectId, userEmail, status);
+        return ResponseEntity.ok(tasks);
+    }
 
 
 }

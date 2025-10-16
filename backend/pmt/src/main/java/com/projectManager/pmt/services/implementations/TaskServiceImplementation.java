@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -175,6 +176,28 @@ public class TaskServiceImplementation implements TaskService {
 
         return task;
 
+    }
+
+    @Override
+    public List<Task> getTasksByStatus(UUID projectId, String userEmail, String status) {
+        // Vérifie si le projet existe
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Projet introuvable"));
+
+        // Vérifie que l’utilisateur existe
+        Users user = usersRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        // Vérifie si l’utilisateur a accès au projet
+        boolean hasAccess = roleRepository.findRoleByUserAndProject(user.getUsers_id(), project.getProject_id()).isPresent()
+                || project.getProject_admin().equals(user.getUsers_id());
+
+        if (!hasAccess) {
+            throw new RuntimeException("Accès refusé : seuls les membres, observateurs ou admins peuvent voir les tâches.");
+        }
+
+        // Retourne les tâches selon le statut
+        return taskRepository.findByProjectAndStatusIgnoreCase(projectId, status);
     }
 
 
