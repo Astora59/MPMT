@@ -10,6 +10,7 @@ import com.projectManager.pmt.repositories.ProjectRepository;
 import com.projectManager.pmt.repositories.RoleRepository;
 import com.projectManager.pmt.repositories.TaskRepository;
 import com.projectManager.pmt.repositories.UsersRepository;
+import com.projectManager.pmt.services.EmailService;
 import com.projectManager.pmt.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +22,11 @@ import java.util.UUID;
 @Service
 public class TaskServiceImplementation implements TaskService {
 
-    @Autowired
-    private TaskRepository taskRepository;
+    @Autowired private TaskRepository taskRepository;
     @Autowired private ProjectRepository projectRepository;
     @Autowired private RoleRepository roleRepository;
     @Autowired private UsersRepository usersRepository;
+    @Autowired private EmailService emailService;
 
 
     @Override
@@ -61,6 +62,9 @@ public class TaskServiceImplementation implements TaskService {
 
     @Override
     public Task assignTaskToUser(UUID projectId, UUID taskId, String currentUserEmail, String targetUserEmail) {
+
+
+
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Projet introuvable"));
 
@@ -95,6 +99,16 @@ public class TaskServiceImplementation implements TaskService {
 
         // Assigne la tâche
         task.setAssignedUser(targetUser);
+
+        // 🔔 Envoie un mail de notification
+        emailService.sendTaskAssignedEmail(
+                targetUser.getEmail(),
+                task.getTaskTitle(),
+                project.getProject_name(),
+                currentUser.getUsername() // ou currentUser.getEmail() selon ton modèle
+        );
+
+
 
         return taskRepository.save(task);
     }
