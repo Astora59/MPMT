@@ -4,6 +4,7 @@ import com.projectManager.pmt.dto.AssignTaskRequest;
 import com.projectManager.pmt.dto.TaskCreationRequest;
 import com.projectManager.pmt.dto.TaskUpdateRequest;
 import com.projectManager.pmt.models.Task;
+import com.projectManager.pmt.models.TaskHistory;
 import com.projectManager.pmt.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -102,5 +103,18 @@ public class TaskController {
         return ResponseEntity.ok(tasks);
     }
 
+
+
+    @GetMapping("/{projectId}/tasks/{taskId}/history")
+    public ResponseEntity<List<TaskHistory>> getTaskHistory(
+            @PathVariable UUID projectId,
+            @PathVariable UUID taskId
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = (String) authentication.getPrincipal();
+
+        List<TaskHistory> historyList = taskService.getTaskHistory(projectId, taskId, email);
+        return ResponseEntity.ok(historyList);
+    }
 
 }

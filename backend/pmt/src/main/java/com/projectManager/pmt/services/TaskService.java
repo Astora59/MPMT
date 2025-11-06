@@ -3,6 +3,7 @@ package com.projectManager.pmt.services;
 import com.projectManager.pmt.dto.TaskCreationRequest;
 import com.projectManager.pmt.dto.TaskUpdateRequest;
 import com.projectManager.pmt.models.Task;
+import com.projectManager.pmt.models.TaskHistory;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -18,5 +19,8 @@ public interface TaskService {
     Task getTaskById(UUID projectId, UUID taskId, String userEmail);
 
     List<Task> getTasksByStatus(UUID projectId, String userEmail, String status);
+
+    List<TaskHistory> getTaskHistory(UUID projectId, UUID taskId, String userEmail);
+
 
 }

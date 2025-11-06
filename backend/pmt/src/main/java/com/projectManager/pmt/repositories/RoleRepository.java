@@ -13,4 +13,6 @@ public interface RoleRepository extends JpaRepository<Role, UUID> {
     // Requête explicite pour éviter les problèmes de nom de propriété
     @Query("SELECT r FROM Role r WHERE r.user.users_id = :userId AND r.project.project_id = :projectId")
     Optional<Role> findRoleByUserAndProject(@Param("userId") UUID userId, @Param("projectId") UUID projectId);
+
+//    Optional<Object> findByUserId(UUID usersId);
 }

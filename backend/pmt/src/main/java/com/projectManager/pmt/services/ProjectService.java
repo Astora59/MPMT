@@ -6,6 +6,7 @@ import com.projectManager.pmt.dto.ProjectRequest;
 import com.projectManager.pmt.models.Project;
 import com.projectManager.pmt.models.Users;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface ProjectService {
@@ -16,4 +17,7 @@ public interface ProjectService {
 
 
     Project updateUserRole(UUID projectId, String adminEmail, AssignRoleRequest request);
+
+    List<Project> getAllProjects();
+
 }

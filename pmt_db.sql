@@ -126,3 +126,18 @@ FOR EACH ROW
 EXECUTE FUNCTION add_admin_role();
 
 
+
+http://localhost:8080/projects/0662e68f-f747-41b9-8a14-f5b1dab4bdf0/tasks/a7801eb9-8d7f-42eb-b1fa-ed021d1ecb1d
+
+http://localhost:8080/projects/0662e68f-f747-41b9-8a14-f5b1dab4bdf0/tasks/266de3f8-c1f5-4e42-ba40-e78d451d0cd4
+{
+  "taskTitle" : "tout a changé",
+  "taskDescription" : "tout a changé, on va tester si l'historique fonctionne",
+  "taskDeadline" : "2025-10-08T23:59:59",
+  "taskStatus" : "pending",
+  "taskPriority" : "Low"
+}
+
+
+
+http://localhost:8080/projects/0662e68f-f747-41b9-8a14-f5b1dab4bdf0/tasks/266de3f8-c1f5-4e42-ba40-e78d451d0cd4/history
