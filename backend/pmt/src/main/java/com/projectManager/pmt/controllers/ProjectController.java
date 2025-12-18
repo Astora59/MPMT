@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,26 +38,71 @@ public class ProjectController {
         return ResponseEntity.ok(newProject);
     }
 
+//    @PostMapping("/{projectId}/invite")
+//    public String inviteUser(@PathVariable UUID projectId,
+//                             @RequestBody InviteRequest inviteRequest,
+//                             @AuthenticationPrincipal String email) {
+//        projectService.inviteUserToProject(projectId, email, inviteRequest);
+//        return "Utilisateur invité avec succès";
+//    }
+
+//    @PostMapping("/{projectId}/invite")
+//    public ResponseEntity<String> inviteUser(@PathVariable UUID projectId,
+//                                             @RequestBody InviteRequest inviteRequest,
+//                                             @AuthenticationPrincipal String email) {
+//        try {
+//            projectService.inviteUserToProject(projectId, email, inviteRequest);
+//            return ResponseEntity.ok("Utilisateur invité avec succès");
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.status(500).body(e.getMessage());
+//        }
+//    }
+
+
+
     @PostMapping("/{projectId}/invite")
-    public String inviteUser(@PathVariable UUID projectId,
-                             @RequestBody InviteRequest inviteRequest,
-                             @AuthenticationPrincipal String email) {
-        projectService.inviteUserToProject(projectId, email, inviteRequest);
-        return "Utilisateur invité avec succès";
+    public ResponseEntity<String> inviteUser(
+            @PathVariable UUID projectId,
+            @RequestBody InviteRequest inviteRequest,
+            Principal principal
+    ) {
+        try {
+            projectService.inviteUserToProject(projectId, principal.getName(), inviteRequest);
+            return ResponseEntity.ok("Utilisateur invité avec succès");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
+        }
     }
+
+
+//    @PutMapping("/{projectId}/role")
+//    public String updateUserRole(@PathVariable UUID projectId,
+//                                 @RequestBody AssignRoleRequest request,
+//                                 @AuthenticationPrincipal String adminEmail) {
+//        projectService.updateUserRole(projectId, adminEmail, request);
+//        return "Rôle mis à jour avec succès pour " + request.getEmail();
+//    }
+//
+//    @GetMapping
+//    public ResponseEntity<List<Project>> getAllProjects() {
+//        List<Project> projects = projectService.getAllProjects();
+//        return ResponseEntity.ok(projects);
+//    }
 
     @PutMapping("/{projectId}/role")
-    public String updateUserRole(@PathVariable UUID projectId,
-                                 @RequestBody AssignRoleRequest request,
-                                 @AuthenticationPrincipal String adminEmail) {
-        projectService.updateUserRole(projectId, adminEmail, request);
-        return "Rôle mis à jour avec succès pour " + request.getEmail();
-    }
-
-    @GetMapping
-    public ResponseEntity<List<Project>> getAllProjects() {
-        List<Project> projects = projectService.getAllProjects();
-        return ResponseEntity.ok(projects);
+    public ResponseEntity<String> updateUserRole(
+            @PathVariable UUID projectId,
+            @RequestBody AssignRoleRequest request,
+            Principal principal
+    ) {
+        try {
+            projectService.updateUserRole(projectId, principal.getName(), request);
+            return ResponseEntity.ok("Rôle mis à jour avec succès pour " + request.getEmail());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
+        }
     }
 
 

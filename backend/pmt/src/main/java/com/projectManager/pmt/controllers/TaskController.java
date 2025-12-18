@@ -2,6 +2,7 @@ package com.projectManager.pmt.controllers;
 
 import com.projectManager.pmt.dto.AssignTaskRequest;
 import com.projectManager.pmt.dto.TaskCreationRequest;
+import com.projectManager.pmt.dto.TaskCreationResponse;
 import com.projectManager.pmt.dto.TaskUpdateRequest;
 import com.projectManager.pmt.models.Task;
 import com.projectManager.pmt.models.TaskHistory;
@@ -28,20 +29,36 @@ public class TaskController {
 
 
 
+//    @PostMapping("/{projectId}/tasks")
+//    public ResponseEntity<Task> createTask(@PathVariable UUID projectId,@RequestBody TaskCreationRequest taskCreationRequest,  @AuthenticationPrincipal String userEmail) {
+//
+//        // Récupérer les infos de l'user connecté
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        String email = (String) authentication.getPrincipal();
+//
+//
+//        Task task = taskService.createTask(projectId, userEmail, taskCreationRequest);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(task);
+//    }
+
     @PostMapping("/{projectId}/tasks")
-    public ResponseEntity<Task> createTask(@PathVariable UUID projectId,@RequestBody TaskCreationRequest taskCreationRequest,  @AuthenticationPrincipal String userEmail) {
-
-        // Récupérer les infos de l'user connecté
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        String email = (String) authentication.getPrincipal();
-
-
-        Task task = taskService.createTask(projectId, userEmail, taskCreationRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(task);
-
-
+    public ResponseEntity<?> createTask(
+            @PathVariable UUID projectId,
+            @RequestBody TaskCreationRequest taskCreationRequest,
+            @AuthenticationPrincipal String userEmail) {
+        try {
+            Task task = taskService.createTask(projectId, userEmail, taskCreationRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new TaskCreationResponse(
+                    task.getTaskTitle(),
+                    task.getTaskDescription(),
+                    task.getTaskStatus()))  ;
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
+        }
     }
+
 
     @PutMapping("/{projectId}/tasks/{taskId}/assign")
     public ResponseEntity<Task> assignTask(
@@ -111,10 +128,11 @@ public class TaskController {
             @PathVariable UUID taskId
     ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = (String) authentication.getPrincipal();
+        String email = authentication.getName();
 
         List<TaskHistory> historyList = taskService.getTaskHistory(projectId, taskId, email);
         return ResponseEntity.ok(historyList);
     }
+
 
 }

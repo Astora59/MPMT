@@ -11,6 +11,7 @@ import com.projectManager.pmt.services.ProjectService;
 import com.projectManager.pmt.models.Users;
 import com.projectManager.pmt.repositories.ProjectRepository;
 import com.projectManager.pmt.repositories.UsersRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class ProjectServiceImplementation implements ProjectService {
     @Autowired
     private UsersRepository usersRepository;
 
-
+    @Transactional
     @Override
     public Project createProject(ProjectRequest projectRequest, String email) {
 

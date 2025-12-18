@@ -4,7 +4,6 @@ public class ProjectRequest {
 
     private String projectName;
     private String projectDescription;
-    private String UserEmail;
 
 
     // Getters et Setters
@@ -22,11 +21,4 @@ public class ProjectRequest {
         this.projectDescription = projectDescription;
     }
 
-    public String getUserEmail() {
-        return UserEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        UserEmail = userEmail;
-    }
 }

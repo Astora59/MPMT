@@ -278,22 +278,32 @@ public class TaskServiceImplementation implements TaskService {
 
     @Override
     public List<TaskHistory> getTaskHistory(UUID projectId, UUID taskId, String userEmail) {
-        // Vérifie que l’utilisateur est bien membre du projet
+
         Users user = usersRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Projet introuvable"));
 
-        boolean hasAccess = roleRepository.findRoleByUserAndProject(user.getUsers_id(), project.getProject_id()).isPresent();
+        // Vérifie que la tâche appartient au projet
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Tâche introuvable"));
+
+        if (!task.getProject().getProject_id().equals(projectId)) {
+            throw new RuntimeException("Erreur : cette tâche n'appartient pas à ce projet.");
+        }
+
+        boolean hasAccess = roleRepository
+                .findRoleByUserAndProject(user.getUsers_id(), project.getProject_id())
+                .isPresent();
 
         if (!hasAccess) {
             throw new RuntimeException("Accès refusé : vous n'êtes pas membre de ce projet.");
         }
 
-        // Récupère et renvoie l’historique
         return taskHistoryRepository.findByTask_TaskId(taskId);
     }
+
 
 
 }
