@@ -1,0 +1,41 @@
+.header-pmt {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    box-sizing: border-box;
+    width: 100%;
+    height: 4.5rem;
+
+
+}
+
+.logo-image {
+    height: 3rem;
+    width: auto;
+}
+
+.navbar-li {
+    list-style: none;
+    text-decoration: none;
+    padding: 20px;   
+    border-radius: 1px solid #65558F;
+
+}
+
+.navbar-elements {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    text-decoration: none;
+    list-style: none;
+    color: red;
+}
+
+.navbar-elements__link {
+    font-weight: 500;
+    color: #333333;
+    text-decoration: none;
+    list-style: none;
+}

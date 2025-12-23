@@ -1,0 +1,73 @@
+section {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+
+.cta-container {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.cta-title {
+    font-size: 2rem;
+    font-weight: 500;
+    color: #333333;
+
+    &__strong {
+        font-weight: 700;
+        color: #65558F;
+    }
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    align-items: center;
+}
+
+.login-button {
+    padding: 10px 20px;
+    background-color: #65558F;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    &:hover {
+        background-color: #9E8FC3;
+        border: 1px solid #9E8FC3;
+    }
+}
+
+.register-button {
+    padding: 10px 20px;
+    border: 1px solid #65558F;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover {
+        background-color: #9E8FC3;
+        border: 1px solid #9E8FC3;
+        color: white;
+    }
+}
+
+.selling-points-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.selling-point {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 200px;
+}
