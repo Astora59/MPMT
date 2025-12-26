@@ -1,0 +1,76 @@
+body {
+    margin: 0;
+    background-color: #000000;
+    height: auto;
+}
+
+.img-register {
+    object-fit: cover;
+    width: 1024px;
+    height: 1024px;
+    
+}
+
+.register-container {
+    display: flex;
+    flex-direction: row;
+    background-color: #f5f5f5;
+    justify-content: space-between;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: 191px;
+    gap: 50px;
+
+    &__elements {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+.form-title {
+    font-size: 24px;
+}
+
+.form-input {
+    border: 1px solid #C9C9C9;
+    border-radius: 4px;
+    width: 360px;
+    height: 56px;
+    padding-left: 10px;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
+.logo {
+    width: 100px;
+    height: auto;
+}
+
+.remember-me-checkbox-container {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.remember-me-checkbox {
+    border: 1px solid #C9C9C9;
+}
+
+.register-button {
+    background-color: #65558F;
+    border: none;
+    color: white;
+    border-radius: 15px;
+    padding: 15px;
+    font-size: 18px;
+    box-shadow: unset;
+    cursor: pointer;
+
+}
