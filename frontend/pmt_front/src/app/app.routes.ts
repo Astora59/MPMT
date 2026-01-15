@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { Home } from './pages/home/home';
 import { ProjectPage } from './pages/project-page/project-page';
 import { Task } from './pages/task/task';
-import { Register } from './pages/register/register';
+import { RegisterComponent  } from './pages/register/register';
 import { Login } from './pages/login/login';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { NotFound } from './pages/not-found/not-found';
@@ -24,7 +24,7 @@ export const routes: Routes = [
     },
     {
         path: 'register',
-        component: Register
+        component: RegisterComponent
     },
     {
         path: 'login',

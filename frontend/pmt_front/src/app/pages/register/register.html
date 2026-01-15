@@ -1,20 +1,68 @@
-<div class="register-container">
+<form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)" class="register-container">
+    <img src="assets/hitachi-park.jpg" alt="" class="img-register">
+    <div class="form-container">
+        <a routerLink="/">
+            <img src="assets/logo.png" alt="logo PMT" class="logo">
+        </a>
+        <p class="form-title">Créer mon profil</p>
+
+        <input
+            type="text"
+            name="username"
+            id="username"
+            [(ngModel)]="form.username"
+            required
+            class="form-input"
+            placeholder="username">
+
+        <input
+            type="email"
+            name="email"
+            id="email"
+            [(ngModel)]="form.email"
+            required
+            class="form-input"
+            placeholder="email">
+
+        <input
+            type="password"
+            name="password"
+            id="password"
+            [(ngModel)]="form.password"
+            required
+            class="form-input"
+            placeholder="password">
+
+        <div class="remember-me-checkbox-container">
+            <input type="checkbox" id="checkbox">
+            <label for="checkbox">Se souvenir de moi</label>
+        </div>
+
+        <button type="submit" class="register-button">
+            S'inscrire
+        </button>
+    </div>
+</form>
+
+
+<!-- <div class="register-container">
     <img src="assets/hitachi-park.jpg" alt="" class="img-register">
     <div class="form-container">
         <a routerLink="">
             <img src="assets/logo.png" alt="logo PMT" class="logo">
         </a>
-        <div class="form-container__elements">
-            <p class="form-title">Créer mon profil</p>
-            <input type="text" name="Username" id="username" required class="form-input" placeholder="username">
-            <input type="email" name="email" id="email" required class="form-input" placeholder="email">
-            <input type="password" name="password" id="password" required class="form-input" placeholder="password">
-            <div class="remember-me-checkbox-container">
-                <input type="checkbox" class="remember-me-checkbox" id="checkbox"><label for="checkbox">Se souvenir de moi</label>
-            </div>
-            <button class="register-button">S'inscrire</button>
-        </div> 
+        <form #registerForm="ngForm">
+            <div class="form-container__elements">
+                <p class="form-title">Créer mon profil</p>
+                <input type="text" name="Username" id="username" [(ngModel)]="form.username" required class="form-input" placeholder="username">
+                <input type="email" name="email" id="email" [(ngModel)]="form.email" required class="form-input" placeholder="email">
+                <input type="password" name="password" id="password" [(ngModel)]="form.password" required class="form-input" placeholder="password">
+                <div class="remember-me-checkbox-container">
+                    <input type="checkbox" class="remember-me-checkbox" id="checkbox"><label for="checkbox">Se souvenir de moi</label>
+                </div>
+                <button class="register-button">S'inscrire</button>
+            </div> 
+        </form>
+        
     </div>
-</div>
-
-
+</div> -->
