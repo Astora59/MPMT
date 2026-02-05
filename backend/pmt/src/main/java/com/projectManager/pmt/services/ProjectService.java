@@ -20,4 +20,5 @@ public interface ProjectService {
 
     List<Project> getAllProjects();
 
+    List<Project> getProjectsForUser(String email);
 }

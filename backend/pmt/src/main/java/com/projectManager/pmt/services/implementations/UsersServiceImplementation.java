@@ -42,16 +42,18 @@ public class UsersServiceImplementation implements UsersService {
 
     @Override
     public LoginResponse login(LoginRequest request) {
-        Optional<Users> user = usersRepository.findByEmail(request.getEmail());
 
-        if (user.isPresent() && user.get().getPasswordHash().equals(request.getPassword())) {
-            // Générer un JWT pour cet utilisateur
-            String token = JwtUtil.generateToken(user.get().getEmail());
-            return new LoginResponse(token); //générer un token et renvoyer le token, java jwT
-        } else {
-            return new LoginResponse("Échec de connexion : email ou mot de passe incorrect");
+        Users user = usersRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        if (!user.getPasswordHash().equals(request.getPassword())) {
+            throw new RuntimeException("Mot de passe incorrect");
         }
+
+        String token = JwtUtil.generateToken(user.getEmail());
+        return new LoginResponse(token);
     }
+
 
 
 }

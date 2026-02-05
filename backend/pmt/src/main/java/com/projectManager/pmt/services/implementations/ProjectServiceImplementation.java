@@ -155,7 +155,10 @@ public class ProjectServiceImplementation implements ProjectService {
         return projectRepository.findAll();
     }
 
-
+    @Override
+    public List<Project> getProjectsForUser(String email) {
+        return projectRepository.findProjectsByUserEmail(email);
+    }
 
 
 }

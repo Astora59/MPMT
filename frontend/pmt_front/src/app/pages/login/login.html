@@ -1,19 +1,56 @@
 <div class="register-container">
+    <img src="assets/hitachi-park.jpg" alt="" class="img-register">
+
     <div class="form-container">
-        <a routerLink="">
+        <!-- Logo -->
+        <a routerLink="/">
             <img src="assets/logo.png" alt="logo PMT" class="logo">
         </a>
-        <div class="form-container__elements">
-            <p class="form-title">Ravi de vous revoir !</p>
-            <input type="email" name="email" id="email" required class="form-input" placeholder="email">
-            <input type="password" name="password" id="password" required class="form-input" placeholder="password">
-            <div class="remember-me-checkbox-container">
-                <input type="checkbox" class="remember-me-checkbox" id="checkbox"><label for="checkbox">Se souvenir de moi</label>
+
+        <!-- Formulaire Login -->
+        <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+
+            <div class="form-container__elements">
+
+                <p class="form-title">Connexion</p>
+
+                <!-- Email -->
+                <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    [(ngModel)]="form.email"
+                    required
+                    class="form-input"
+                    placeholder="email">
+
+                <!-- Password -->
+                <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    [(ngModel)]="form.password"
+                    required
+                    class="form-input"
+                    placeholder="password">
+
+                <!-- Message erreur -->
+                <p *ngIf="errorMessage" class="error-message">
+                    {{ errorMessage }}
+                </p>
+
+                <!-- Bouton -->
+                <button type="submit" class="register-button">
+                    Se connecter
+                </button>
+
+                <!-- Lien vers Register -->
+                <p class="redirect-text">
+                    Pas encore de compte ?
+                    <a routerLink="/register">Créer un profil</a>
+                </p>
+
             </div>
-            <button class="register-button">Se connecter</button>
-        </div> 
+        </form>
     </div>
-    <img src="assets/hitachi-park.jpg" alt="" class="img-register">
 </div>
-
-

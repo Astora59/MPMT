@@ -84,11 +84,11 @@ public class ProjectController {
 //        return "Rôle mis à jour avec succès pour " + request.getEmail();
 //    }
 //
-//    @GetMapping
-//    public ResponseEntity<List<Project>> getAllProjects() {
-//        List<Project> projects = projectService.getAllProjects();
-//        return ResponseEntity.ok(projects);
-//    }
+    @GetMapping
+    public ResponseEntity<List<Project>> getAllProjects() {
+        List<Project> projects = projectService.getAllProjects();
+        return ResponseEntity.ok(projects);
+    }
 
     @PutMapping("/{projectId}/role")
     public ResponseEntity<String> updateUserRole(
@@ -105,6 +105,11 @@ public class ProjectController {
         }
     }
 
-
+    @GetMapping("/me")
+    public ResponseEntity<List<Project>> getMyProjects(Principal principal) {
+        return ResponseEntity.ok(
+                projectService.getProjectsForUser(principal.getName())
+        );
+    }
 
 }

@@ -26,6 +26,10 @@ body {
     margin-right: 191px;
     gap: 25px;
 
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
+
     &__elements {
         display: flex;
         flex-direction: column;
