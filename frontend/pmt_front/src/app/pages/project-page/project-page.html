@@ -1,1 +1,195 @@
-<p>project-page works!</p>
+<!-- <div class="page-container">
+  <app-navbar></app-navbar>
+  <div *ngIf="tasks.length === 0" class="empty-message">
+    Aucune tâche pour ce projet
+  </div>
+
+  <div class="task-grid">
+    <div class="task-card" *ngFor="let task of tasks">
+
+      <h3>{{ task.taskTitle }}</h3>
+
+      <p class="description">
+        {{ task.taskDescription }}
+      </p>
+
+      <div class="info">
+
+        <span class="deadline">
+          📅 {{ task.taskDeadline | date:'shortDate' }}
+        </span>
+
+        <span 
+          class="status"
+          [ngClass]="{
+            'status-pending': task.taskStatus === 'pending',
+            'status-completed': task.taskStatus === 'completed',
+            'status-in_progress' : task.taskStatus === 'in_progress'
+          }">
+          {{ task.taskStatus }}
+        </span>
+
+        <span 
+          class="priority"
+          [ngClass]="{
+            'priority-high': task.taskPriority === 'High',
+            'priority-low': task.taskPriority === 'Low'
+          }">
+          {{ task.taskPriority }}
+        </span>
+
+      </div>
+      <button class="btn-primary space">Assigner</button>
+    </div>
+  </div>
+</div> -->
+
+<div class="kanban-board">
+
+  <!-- Pending -->
+  <div class="kanban-column">
+    <h2>Pending</h2>
+
+    <div *ngFor="let task of pendingTasks" class="task-card">
+      <h3>{{ task.taskTitle }}</h3>
+      <p>{{ task.taskDescription }}</p>
+      <p>Deadline : {{ task.taskDeadline }}</p>
+      <p>Priority : {{ task.taskPriority }}</p>
+      <div class="assignment-container">
+        <span 
+          class="status"
+          [ngClass]="{
+            'status-pending': task.taskStatus === 'pending',
+            'status-completed': task.taskStatus === 'completed',
+            'status-in_progress' : task.taskStatus === 'in_progress'
+          }">
+          {{ task.taskStatus }}
+        </span>
+
+        <span 
+          class="priority"
+          [ngClass]="{
+            'priority-high': task.taskPriority === 'High',
+            'priority-low': task.taskPriority === 'Low'
+          }">
+          {{ task.taskPriority }}
+        </span>
+      <button class="btn-primary space">Assigner</button>
+      </div>
+      
+      
+    </div>
+
+  </div>
+
+
+  <!-- In Progress -->
+  <div class="kanban-column">
+    <h2>In Progress</h2>
+
+    <div *ngFor="let task of inProgressTasks" class="task-card">
+      <h3>{{ task.taskTitle }}</h3>
+      <p>{{ task.taskDescription }}</p>
+      <p>Deadline : {{ task.taskDeadline }}</p>
+      <p>Priority : {{ task.taskPriority }}</p>
+      <div class="assignment-container">
+        <span 
+          class="status"
+          [ngClass]="{
+            'status-pending': task.taskStatus === 'pending',
+            'status-completed': task.taskStatus === 'completed',
+            'status-in_progress' : task.taskStatus === 'in_progress'
+          }">
+          {{ task.taskStatus }}
+        </span>
+
+        <span 
+          class="priority"
+          [ngClass]="{
+            'priority-high': task.taskPriority === 'High',
+            'priority-low': task.taskPriority === 'Low'
+          }">
+          {{ task.taskPriority }}
+        </span>
+      <button class="btn-primary space">Assigner</button>
+      </div>
+      
+    </div>
+
+  </div>
+
+
+  <!-- Completed -->
+  <div class="kanban-column">
+    <h2>Completed</h2>
+
+    <div *ngFor="let task of completedTasks" class="task-card">
+      <h3>{{ task.taskTitle }}</h3>
+      <p>{{ task.taskDescription }}</p>
+      <p>Deadline : {{ task.taskDeadline }}</p>
+      <p>Priority : {{ task.taskPriority }}</p>
+      <div class="assignment-container">
+        <span 
+          class="status"
+          [ngClass]="{
+            'status-pending': task.taskStatus === 'pending',
+            'status-completed': task.taskStatus === 'completed',
+            'status-in_progress' : task.taskStatus === 'in_progress'
+          }">
+          {{ task.taskStatus }}
+        </span>
+
+        <span 
+          class="priority"
+          [ngClass]="{
+            'priority-high': task.taskPriority === 'High',
+            'priority-low': task.taskPriority === 'Low'
+          }">
+          {{ task.taskPriority }}
+        </span>
+      <button class="btn-primary space">Assigner</button>
+      </div>
+      
+    </div>
+
+  </div>
+
+</div>
+
+<div class="members-section">
+
+<h2>Collaborateurs</h2>
+
+<table class="members-table">
+
+<tr>
+<th>Email</th>
+<th>Rôle</th>
+<th>Modifier</th>
+</tr>
+
+<tr *ngFor="let member of members">
+
+<td>{{member.email}}</td>
+
+<td>{{member.roleName}}</td>
+
+<td>
+
+<select
+[value]="member.roleName"
+(change)="changeRole(member, $any($event.target).value)">
+
+<option value="admin">Admin</option>
+<option value="member">Member</option>
+<option value="observer">Observer</option>
+
+</select>
+
+</td>
+
+</tr>
+
+</table>
+
+</div>

@@ -29,18 +29,7 @@ public class TaskController {
 
 
 
-//    @PostMapping("/{projectId}/tasks")
-//    public ResponseEntity<Task> createTask(@PathVariable UUID projectId,@RequestBody TaskCreationRequest taskCreationRequest,  @AuthenticationPrincipal String userEmail) {
-//
-//        // Récupérer les infos de l'user connecté
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        String email = (String) authentication.getPrincipal();
-//
-//
-//        Task task = taskService.createTask(projectId, userEmail, taskCreationRequest);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(task);
-//    }
+
 
     @PostMapping("/{projectId}/tasks")
     public ResponseEntity<?> createTask(
@@ -132,6 +121,19 @@ public class TaskController {
 
         List<TaskHistory> historyList = taskService.getTaskHistory(projectId, taskId, email);
         return ResponseEntity.ok(historyList);
+    }
+
+    @GetMapping("/{projectId}/tasks")
+    public ResponseEntity<List<Task>> getAllTasksByProject(
+            @PathVariable UUID projectId
+    ) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+
+        List<Task> tasks = taskService.getAllTasksByProject(projectId, userEmail);
+
+        return ResponseEntity.ok(tasks);
     }
 
 

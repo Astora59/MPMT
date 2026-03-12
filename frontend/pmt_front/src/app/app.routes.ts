@@ -6,8 +6,9 @@ import { ProjectPage } from './pages/project-page/project-page';
 import { Task } from './pages/task/task';
 import { RegisterComponent  } from './pages/register/register';
 import { Login } from './pages/login/login';
-import { Dashboard } from './pages/dashboard/dashboard';
+import { DashboardComponent } from './pages/dashboard/dashboard';
 import { NotFound } from './pages/not-found/not-found';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
     {
@@ -32,7 +33,8 @@ export const routes: Routes = [
     },
     {
         path: 'dashboard',
-        component: Dashboard
+        component: DashboardComponent,
+        canActivate: [authGuard]
     },
     {
         path: '**',

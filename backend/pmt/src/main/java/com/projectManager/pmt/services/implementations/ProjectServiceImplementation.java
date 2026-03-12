@@ -2,6 +2,7 @@ package com.projectManager.pmt.services.implementations;
 
 import com.projectManager.pmt.dto.AssignRoleRequest;
 import com.projectManager.pmt.dto.InviteRequest;
+import com.projectManager.pmt.dto.ProjectMemberResponse;
 import com.projectManager.pmt.dto.ProjectRequest;
 import com.projectManager.pmt.models.Project;
 import com.projectManager.pmt.models.Role;
@@ -13,7 +14,6 @@ import com.projectManager.pmt.repositories.ProjectRepository;
 import com.projectManager.pmt.repositories.UsersRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -159,6 +159,40 @@ public class ProjectServiceImplementation implements ProjectService {
     public List<Project> getProjectsForUser(String email) {
         return projectRepository.findProjectsByUserEmail(email);
     }
+
+    @Override
+    public List<ProjectMemberResponse> getProjectMembers(UUID projectId, String userEmail) {
+
+        // Vérifier que le projet existe
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Projet introuvable"));
+
+        // Vérifier que l'utilisateur appartient au projet
+        Users user = usersRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        Optional<Role> role = roleRepository.findRoleByUserAndProject(
+                user.getUsers_id(),
+                project.getProject_id()
+        );
+
+        if (role.isEmpty()) {
+            throw new RuntimeException("Accès refusé");
+        }
+
+        // récupérer tous les membres
+        List<Role> roles = roleRepository.findByProject_ProjectId(projectId);
+
+        return roles.stream()
+                .map(r -> new ProjectMemberResponse(
+                        r.getUser().getUsers_id(),
+                        r.getUser().getUsername(),
+                        r.getUser().getEmail(),
+                        r.getRoleName()
+                ))
+                .toList();
+    }
+
 
 
 }

@@ -127,17 +127,29 @@ EXECUTE FUNCTION add_admin_role();
 
 
 
-http://localhost:8080/projects/0662e68f-f747-41b9-8a14-f5b1dab4bdf0/tasks/a7801eb9-8d7f-42eb-b1fa-ed021d1ecb1d
+-- http://localhost:8080/projects/0662e68f-f747-41b9-8a14-f5b1dab4bdf0/tasks/a7801eb9-8d7f-42eb-b1fa-ed021d1ecb1d
 
-http://localhost:8080/projects/0662e68f-f747-41b9-8a14-f5b1dab4bdf0/tasks/266de3f8-c1f5-4e42-ba40-e78d451d0cd4
-{
-  "taskTitle" : "tout a changé",
-  "taskDescription" : "tout a changé, on va tester si l'historique fonctionne",
-  "taskDeadline" : "2025-10-08T23:59:59",
-  "taskStatus" : "pending",
-  "taskPriority" : "Low"
-}
+-- http://localhost:8080/projects/0662e68f-f747-41b9-8a14-f5b1dab4bdf0/tasks/266de3f8-c1f5-4e42-ba40-e78d451d0cd4
+-- {
+--   "taskTitle" : "tout a changé",
+--   "taskDescription" : "tout a changé, on va tester si l'historique fonctionne",
+--   "taskDeadline" : "2025-10-08T23:59:59",
+--   "taskStatus" : "pending",
+--   "taskPriority" : "Low"
+-- }
 
 
 
-http://localhost:8080/projects/0662e68f-f747-41b9-8a14-f5b1dab4bdf0/tasks/266de3f8-c1f5-4e42-ba40-e78d451d0cd4/history
+-- http://localhost:8080/projects/0662e68f-f747-41b9-8a14-f5b1dab4bdf0/tasks/266de3f8-c1f5-4e42-ba40-e78d451d0cd4/history
+
+
+
+
+-- http://localhost:8080/projects/9bd04858-7603-4479-8625-2bdd6f4e1259/tasks
+-- {
+--     "taskTitle": "Tâche 1",
+--     "taskDescription": "Je suis la description de la tâche 1",
+--     "taskDeadline": "2026-03-09T00:00:00",
+--     "taskStatus": "pending",
+--     "taskPriority": "High"
+-- }

@@ -1,1 +1,47 @@
-<app-navbar></app-navbar>
+<div class="page-container">
+  <app-navbar></app-navbar>
+  <div class="dashboard-container">
+
+    <div class="dashboard-header">
+      <h1>Mes projets</h1>
+      <button class="btn-primary" (click)="openModal()">
+        + Nouveau projet
+      </button>
+    </div>
+
+    <div class="projects-grid">
+        <div class="project-card" *ngFor="let project of projects" [routerLink]="['/project', project.project_id]">
+          <div>
+            <h3>{{ project.project_name }}</h3>
+            <p>{{ project.project_description }}</p>
+          </div>
+          <div>
+            <button *ngIf="project.project_admin === currentUserId" class="btn-primary" (click)="openInviteModal(project.project_id); $event.stopPropagation();">+ Inviter</button>
+          </div>
+          
+      </div>
+      
+
+
+      <p *ngIf="projects.length === 0">
+        Aucun projet pour le moment.
+      </p>
+    </div>
+
+    
+    <app-create-project-modal
+      *ngIf="showModal"
+      (close)="closeModal()"
+      (created)="loadProjects()">
+    </app-create-project-modal>
+
+    <app-invite-user-modal
+      *ngIf="showInviteModal"
+      [projectId]="selectedProjectId!"
+      (close)="closeInviteModal()"
+      (invited)="loadProjects()">
+  </app-invite-user-modal>
+
+
+  </div>
+</div>

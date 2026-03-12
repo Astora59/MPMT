@@ -19,12 +19,16 @@ import java.util.Optional;
 @Service
 public class UsersServiceImplementation implements UsersService {
 
-    @Autowired
-    private UsersRepository usersRepository;
+    private final UsersRepository usersRepository;
+    private final JwtUtil jwtUtil;
+
+    public UsersServiceImplementation(UsersRepository usersRepository, JwtUtil jwtUtil) {
+        this.usersRepository = usersRepository;
+        this.jwtUtil = jwtUtil;
+    }
 
     @Override
     public List<Users> findAll() {
-
         return usersRepository.findAll();
     }
 
@@ -34,9 +38,6 @@ public class UsersServiceImplementation implements UsersService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPasswordHash(request.getPassword());
-
-
-
         return usersRepository.save(user);
     }
 
@@ -50,10 +51,9 @@ public class UsersServiceImplementation implements UsersService {
             throw new RuntimeException("Mot de passe incorrect");
         }
 
-        String token = JwtUtil.generateToken(user.getEmail());
-        return new LoginResponse(token);
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        return new LoginResponse(token, user.getUsers_id());
     }
-
-
-
 }
+

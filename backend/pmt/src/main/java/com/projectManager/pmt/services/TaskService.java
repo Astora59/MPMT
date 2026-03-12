@@ -23,4 +23,5 @@ public interface TaskService {
     List<TaskHistory> getTaskHistory(UUID projectId, UUID taskId, String userEmail);
 
 
+    List<Task> getAllTasksByProject(UUID projectId, String userEmail);
 }

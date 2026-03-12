@@ -108,49 +108,7 @@ public class TaskServiceImplementation implements TaskService {
         return taskRepository.save(task);
     }
 
-//    @Override
-//    public Task updateTask(UUID projectId, UUID taskId, String userEmail, TaskUpdateRequest updateRequest) {
-//
-//        // Récupère le projet
-//        Project project = projectRepository.findById(projectId)
-//                .orElseThrow(() -> new RuntimeException("Projet introuvable"));
-//
-//        // Récupère l’utilisateur
-//        Users user = usersRepository.findByEmail(userEmail)
-//                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
-//
-//        // Vérifie si l’utilisateur est admin ou membre du projet
-//        boolean hasAccess = project.getProject_admin().equals(user.getUsers_id())
-//                || roleRepository.findRoleByUserAndProject(user.getUsers_id(), projectId)
-//                .map(role -> role.getRoleName().equalsIgnoreCase("member"))
-//                .orElse(false);
-//
-//        if (!hasAccess) {
-//            throw new RuntimeException("Accès refusé : seuls les admins ou membres peuvent modifier une tâche.");
-//        }
-//
-//        // Récupère la tâche
-//        Task task = taskRepository.findById(taskId)
-//                .orElseThrow(() -> new RuntimeException("Tâche introuvable"));
-//
-//        // Vérifie que la tâche appartient bien au projet
-//        if (!task.getProject().getProject_id().equals(projectId)) {
-//            throw new RuntimeException("Cette tâche n'appartient pas à ce projet.");
-//        }
-//
-//        // Met à jour les champs si présents
-//        if (updateRequest.getTaskTitle() != null) task.setTaskTitle(updateRequest.getTaskTitle());
-//        if (updateRequest.getTaskDescription() != null) task.setTaskDescription(updateRequest.getTaskDescription());
-//        if (updateRequest.getTaskStatus() != null) task.setTaskStatus(updateRequest.getTaskStatus());
-//        if (updateRequest.getTaskPriority() != null) task.setTaskPriority(updateRequest.getTaskPriority());
-//        if (updateRequest.getTaskDeadline() != null) task.setTaskDeadline(updateRequest.getTaskDeadline());
-//
-//
-//
-//        return taskRepository.save(task);
-//
-//
-//    }
+
 
     @Override
     public Task updateTask(UUID projectId, UUID taskId, String userEmail, TaskUpdateRequest updateRequest) {
@@ -304,6 +262,20 @@ public class TaskServiceImplementation implements TaskService {
         return taskHistoryRepository.findByTask_TaskId(taskId);
     }
 
+    @Override
+    public List<Task> getAllTasksByProject(UUID projectId, String userEmail) {
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Projet introuvable"));
+
+        // Vérifier que l'utilisateur appartient au projet
+        roleRepository.findRoleByUserAndProject(
+                usersRepository.findByEmail(userEmail).orElseThrow().getUsers_id(),
+                projectId
+        ).orElseThrow(() -> new RuntimeException("Accès refusé"));
+
+        return taskRepository.findByProject(project);
+    }
 
 
 }

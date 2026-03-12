@@ -15,6 +15,7 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
     @Query("SELECT t FROM Task t WHERE t.project.project_id = :projectId AND UPPER(t.taskStatus) = UPPER(:status)")
     List<Task> findByProjectAndStatusIgnoreCase(@Param("projectId") UUID projectId, @Param("status") String status);
 
+    List<Task> findByProject(Project project);
 
 }
 

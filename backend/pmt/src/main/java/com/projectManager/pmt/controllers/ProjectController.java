@@ -2,16 +2,17 @@ package com.projectManager.pmt.controllers;
 
 import com.projectManager.pmt.dto.AssignRoleRequest;
 import com.projectManager.pmt.dto.InviteRequest;
+import com.projectManager.pmt.dto.ProjectMemberResponse;
 import com.projectManager.pmt.dto.ProjectRequest;
 import com.projectManager.pmt.models.Project;
+import com.projectManager.pmt.repositories.ProjectRepository;
+import com.projectManager.pmt.repositories.UsersRepository;
 import com.projectManager.pmt.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -24,6 +25,12 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private UsersRepository usersRepository;
 
     @PostMapping("/create")
     public ResponseEntity<Project> createProject(@RequestBody ProjectRequest projectRequest) {
@@ -90,6 +97,7 @@ public class ProjectController {
         return ResponseEntity.ok(projects);
     }
 
+
     @PutMapping("/{projectId}/role")
     public ResponseEntity<String> updateUserRole(
             @PathVariable UUID projectId,
@@ -111,5 +119,27 @@ public class ProjectController {
                 projectService.getProjectsForUser(principal.getName())
         );
     }
+
+    @GetMapping("/{projectId}/members")
+    public ResponseEntity<?> getProjectMembers(
+            @PathVariable UUID projectId,
+            Principal principal
+    ) {
+
+        try {
+
+            List<ProjectMemberResponse> members =
+                    projectService.getProjectMembers(projectId, principal.getName());
+
+            return ResponseEntity.ok(members);
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(e.getMessage());
+
+        }
+    }
+
 
 }

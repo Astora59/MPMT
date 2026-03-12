@@ -2,6 +2,7 @@ package com.projectManager.pmt.services;
 
 import com.projectManager.pmt.dto.AssignRoleRequest;
 import com.projectManager.pmt.dto.InviteRequest;
+import com.projectManager.pmt.dto.ProjectMemberResponse;
 import com.projectManager.pmt.dto.ProjectRequest;
 import com.projectManager.pmt.models.Project;
 import com.projectManager.pmt.models.Users;
@@ -21,4 +22,6 @@ public interface ProjectService {
     List<Project> getAllProjects();
 
     List<Project> getProjectsForUser(String email);
+
+    List<ProjectMemberResponse> getProjectMembers(UUID projectId, String userEmail);
 }
