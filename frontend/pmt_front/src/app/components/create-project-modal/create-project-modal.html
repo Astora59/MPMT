@@ -1,0 +1,28 @@
+<div class="modal-backdrop" (click)="close.emit()"></div>
+
+<div class="modal">
+  
+
+  <form class="modal-form" (ngSubmit)="submit()">
+    <h2>Nouveau projet</h2>
+    <input
+      type="text"
+      [(ngModel)]="project.projectName"
+      name="projectName"
+      placeholder="Nom du projet"
+      class="form-input"
+      required />
+      
+    <textarea
+      [(ngModel)]="project.projectDescription"
+      name="projectDescription"
+      class="form-input"
+      placeholder="Description">
+    </textarea>
+
+    <div class="modal-actions">
+      <button type="button" (click)="close.emit()" class="btn-secondary">Annuler</button>
+      <button type="submit" class="btn-secondary">Créer</button>
+    </div>
+  </form>
+</div>

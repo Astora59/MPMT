@@ -1,0 +1,30 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <h2>Inviter un membre</h2>
+
+    <form (ngSubmit)="inviteUser()">
+      <input
+        type="email"
+        placeholder="Email du membre"
+        [(ngModel)]="email"
+        name="email"
+        class="form-input"
+        required
+      />
+
+      <p class="error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </p>
+
+      <div class="actions">
+        <button type="button" class="btn-secondary" (click)="onClose()">Annuler</button>
+        <button type="submit" class="btn-primary" [disabled]="loading">
+          {{ loading ? 'Invitation...' : 'Inviter' }}
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
