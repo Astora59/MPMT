@@ -1,48 +1,96 @@
-<!-- <div class="page-container">
-  <app-navbar></app-navbar>
-  <div *ngIf="tasks.length === 0" class="empty-message">
-    Aucune tâche pour ce projet
-  </div>
+<!-- <div class="task-form">
 
-  <div class="task-grid">
-    <div class="task-card" *ngFor="let task of tasks">
+  <h3>Créer une tâche</h3>
 
-      <h3>{{ task.taskTitle }}</h3>
+  <input
+    type="text"
+    placeholder="Titre"
+    [(ngModel)]="newTask.taskTitle"
+  />
 
-      <p class="description">
-        {{ task.taskDescription }}
-      </p>
+  <textarea
+    placeholder="Description"
+    [(ngModel)]="newTask.taskDescription"
+  ></textarea>
 
-      <div class="info">
+  <input
+    type="date"
+    [(ngModel)]="newTask.taskDeadline"
+  />
 
-        <span class="deadline">
-          📅 {{ task.taskDeadline | date:'shortDate' }}
-        </span>
+  <select [(ngModel)]="newTask.taskPriority">
+    <option value="Low">Low</option>
+    <option value="Medium">Medium</option>
+    <option value="High">High</option>
+  </select>
 
-        <span 
-          class="status"
-          [ngClass]="{
-            'status-pending': task.taskStatus === 'pending',
-            'status-completed': task.taskStatus === 'completed',
-            'status-in_progress' : task.taskStatus === 'in_progress'
-          }">
-          {{ task.taskStatus }}
-        </span>
+  <button class="btn-primary" (click)="createTask()">
+    Créer
+  </button>
 
-        <span 
-          class="priority"
-          [ngClass]="{
-            'priority-high': task.taskPriority === 'High',
-            'priority-low': task.taskPriority === 'Low'
-          }">
-          {{ task.taskPriority }}
-        </span>
-
-      </div>
-      <button class="btn-primary space">Assigner</button>
-    </div>
-  </div>
 </div> -->
+
+<!-- BOUTON OUVRIR -->
+<button class="btn-primary" (click)="openModal()">
+  + Nouvelle tâche
+</button>
+
+<!-- MODALE -->
+<div class="modal-backdrop" *ngIf="showModal">
+
+  <div class="modal">
+
+    <h2>Créer une tâche</h2>
+
+    <form (ngSubmit)="createTask()" class="create_task_form">
+
+      <input
+        type="text"
+        placeholder="Titre"
+        [(ngModel)]="newTask.taskTitle"
+        name="taskTitle"
+        required
+        class="form_input"
+      />
+
+      <textarea
+        placeholder="Description"
+        [(ngModel)]="newTask.taskDescription"
+        name="taskDescription"
+        required
+        class="form_input"
+      ></textarea>
+
+      <input
+        type="date"
+        [(ngModel)]="newTask.taskDeadline"
+        name="taskDeadline"
+        required
+        class="form_input"
+      />
+
+      <select [(ngModel)]="newTask.taskStatus" name="taskStatus" class="form_input">
+        <option value="pending">Pending</option>
+        <option value="in_progress">In progress</option>
+        <option value="completed">Completed</option>
+      </select>
+
+      <select [(ngModel)]="newTask.taskPriority" name="taskPriority" class="form_input">
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+      </select>
+
+      <div class="modal-actions">
+        <button type="submit" class="btn-primary">Créer</button>
+        <button type="button" class="btn-secondary" (click)="closeModal()">Annuler</button>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+
 
 <div class="kanban-board">
 
@@ -50,7 +98,7 @@
   <div class="kanban-column">
     <h2>Pending</h2>
 
-    <div *ngFor="let task of pendingTasks" class="task-card">
+    <div *ngFor="let task of pendingTasks" class="task-card" (click)="openTask(task)">
       <h3>{{ task.taskTitle }}</h3>
       <p>{{ task.taskDescription }}</p>
       <p>Deadline : {{ task.taskDeadline }}</p>
@@ -74,7 +122,18 @@
           }">
           {{ task.taskPriority }}
         </span>
-      <button class="btn-primary space">Assigner</button>
+        <select (change)="assignTask(task, $any($event.target).value)">
+
+          <option value="">Assigner</option>
+
+          <option *ngFor="let member of members" [value]="member.email">
+            {{ member.username }} ({{ member.roleName }})
+          </option>
+
+        </select>
+        <p *ngIf="task.assignedUser">
+        👤 Assigné à : {{ task.assignedUser.username }}
+        </p>
       </div>
       
       
@@ -87,7 +146,7 @@
   <div class="kanban-column">
     <h2>In Progress</h2>
 
-    <div *ngFor="let task of inProgressTasks" class="task-card">
+    <div *ngFor="let task of inProgressTasks" class="task-card" (click)="openTask(task)">
       <h3>{{ task.taskTitle }}</h3>
       <p>{{ task.taskDescription }}</p>
       <p>Deadline : {{ task.taskDeadline }}</p>
@@ -111,7 +170,18 @@
           }">
           {{ task.taskPriority }}
         </span>
-      <button class="btn-primary space">Assigner</button>
+        <select (change)="assignTask(task, $any($event.target).value)">
+
+          <option value="">Assigner</option>
+
+          <option *ngFor="let member of members" [value]="member.email">
+            {{ member.username }} ({{ member.roleName }})
+          </option>
+
+        </select>
+        <p *ngIf="task.assignedUser">
+        👤 Assigné à : {{ task.assignedUser.username }}
+        </p>
       </div>
       
     </div>
@@ -123,7 +193,7 @@
   <div class="kanban-column">
     <h2>Completed</h2>
 
-    <div *ngFor="let task of completedTasks" class="task-card">
+    <div *ngFor="let task of completedTasks" class="task-card" (click)="openTask(task)">
       <h3>{{ task.taskTitle }}</h3>
       <p>{{ task.taskDescription }}</p>
       <p>Deadline : {{ task.taskDeadline }}</p>
@@ -147,7 +217,18 @@
           }">
           {{ task.taskPriority }}
         </span>
-      <button class="btn-primary space">Assigner</button>
+      <select (change)="assignTask(task, $any($event.target).value)">
+
+          <option value="">Assigner</option>
+
+          <option *ngFor="let member of members" [value]="member.email">
+            {{ member.username }} ({{ member.roleName }})
+          </option>
+
+        </select>
+        <p *ngIf="task.assignedUser">
+        👤 Assigné à : {{ task.assignedUser.username }}
+        </p>
       </div>
       
     </div>
@@ -156,40 +237,166 @@
 
 </div>
 
+
 <div class="members-section">
 
-<h2>Collaborateurs</h2>
+  <h2>Membres du projet</h2>
 
-<table class="members-table">
+  <div *ngIf="members.length === 0" class="empty-message">
+    Aucun membre dans ce projet
+  </div>
 
-<tr>
-<th>Email</th>
-<th>Rôle</th>
-<th>Modifier</th>
-</tr>
+  <div class="member-card" *ngFor="let member of members">
 
-<tr *ngFor="let member of members">
+    <div class="member-info">
+      <strong>{{ member.username }}</strong>
+      <span>{{ member.email }}</span>
+    </div>
 
-<td>{{member.email}}</td>
+    <div class="member-role">
 
-<td>{{member.roleName}}</td>
+      <select
+        [value]="member.roleName"
+        [disabled]="member.roleName === 'admin'"
+        (change)="changeRole(member, $any($event.target).value)"
+      >
 
-<td>
+        <option value="admin">Admin</option>
+        <option value="member">Member</option>
+        <option value="observer">Observer</option>
 
-<select
-[value]="member.roleName"
-(change)="changeRole(member, $any($event.target).value)">
+      </select>
 
-<option value="admin">Admin</option>
-<option value="member">Member</option>
-<option value="observer">Observer</option>
+    </div>
 
-</select>
+  </div>
 
-</td>
+</div>
+<a routerLink="/dashboard" class="btn-secondary space">RETOUR</a>
 
-</tr>
 
-</table>
+<!-- MODALE TASK -->
+<div class="modal-backdrop" *ngIf="selectedTask">
 
+  <div class="modal" (click)="$event.stopPropagation()">
+
+    <h2 *ngIf="!editMode">{{ selectedTask.taskTitle }}</h2>
+
+    <input
+      *ngIf="editMode"
+      [(ngModel)]="selectedTask.taskTitle"
+      name="editTitle"
+    />
+
+    <textarea
+      [(ngModel)]="selectedTask.taskDescription"
+      [readonly]="!editMode"
+      name="editDescription"
+    ></textarea>
+
+    <input
+      type="date"
+      [(ngModel)]="selectedTask.taskDeadline"
+      [disabled]="!editMode"
+      name="editDeadline"
+    />
+
+    <select
+      [(ngModel)]="selectedTask.taskStatus"
+      [disabled]="!editMode"
+      name="editStatus"
+    >
+      <option value="pending">Pending</option>
+      <option value="in_progress">In progress</option>
+      <option value="completed">Completed</option>
+    </select>
+
+    <select
+      [(ngModel)]="selectedTask.taskPriority"
+      [disabled]="!editMode"
+      name="editPriority"
+    >
+      <option value="Low">Low</option>
+      <option value="Medium">Medium</option>
+      <option value="High">High</option>
+    </select>
+
+    <!-- ACTIONS -->
+    <div class="modal-actions">
+
+      <button *ngIf="!editMode" (click)="enableEdit()" class="btn-primary">
+        Modifier
+      </button>
+
+      <button *ngIf="editMode" (click)="updateTask()" class="btn-primary">
+        Sauvegarder
+      </button>
+
+      <button (click)="closeTaskModal()" class="btn-secondary">
+        Fermer
+      </button>
+
+    </div>
+
+    <hr />
+
+<h3>Historique des modifications</h3>
+
+<div class="history-container">
+
+  <div *ngIf="taskHistory.length === 0">
+    Aucun historique
+  </div>
+
+  <div class="history-item" *ngFor="let h of taskHistory">
+
+  <div class="history-header">
+    <strong>{{ h.modifiedBy?.username }}</strong>
+    <span class="date">
+      {{ h.changeDate | date:'short' }}
+    </span>
+  </div>
+
+  <div class="history-content">
+    {{ h.changeDescription }}
+  </div>
+
+  <!-- TITLE -->
+  <div *ngIf="h.oldTitle !== h.newTitle" class="history-change">
+    ✏️ Titre :
+    <span class="old">{{ h.oldTitle }}</span>
+    →
+    <span class="new">{{ h.newTitle }}</span>
+  </div>
+
+  <!-- DESCRIPTION -->
+  <div *ngIf="h.oldDescription !== h.newDescription" class="history-change">
+    📝 Description modifiée
+  </div>
+
+  <!-- DEADLINE -->
+  <div *ngIf="h.oldDeadline !== h.newDeadline" class="history-change">
+    📅 Deadline :
+    <span class="old">{{ h.oldDeadline | date:'shortDate' }}</span>
+    →
+    <span class="new">{{ h.newDeadline | date:'shortDate' }}</span>
+  </div>
+
+  <!-- STATUS -->
+  <div *ngIf="h.oldStatus !== h.newStatus" class="history-change status-change">
+    📌 Status :
+    <span class="old">{{ h.oldStatus }}</span>
+    →
+    <span class="new">{{ h.newStatus }}</span>
+  </div>
+
+  <!-- PRIORITY -->
+  <div *ngIf="h.oldPriority !== h.newPriority" class="history-change priority-change">
+    ⚡ Priorité :
+    <span class="old">{{ h.oldPriority }}</span>
+    →
+    <span class="new">{{ h.newPriority }}</span>
+  </div>
+
+</div>
 </div>

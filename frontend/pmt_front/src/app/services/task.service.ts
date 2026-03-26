@@ -9,6 +9,12 @@ export interface Task {
   taskDeadline: string;
   taskStatus: string;
   taskPriority: string;
+
+  assignedUser?: {
+    users_id: string
+    username: string
+    email: string
+  }
 }
 
 @Injectable({

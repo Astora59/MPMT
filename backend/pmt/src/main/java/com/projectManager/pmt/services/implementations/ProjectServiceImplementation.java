@@ -181,7 +181,7 @@ public class ProjectServiceImplementation implements ProjectService {
         }
 
         // récupérer tous les membres
-        List<Role> roles = roleRepository.findByProject_ProjectId(projectId);
+        List<Role> roles = roleRepository.findRolesByProjectId(projectId);
 
         return roles.stream()
                 .map(r -> new ProjectMemberResponse(

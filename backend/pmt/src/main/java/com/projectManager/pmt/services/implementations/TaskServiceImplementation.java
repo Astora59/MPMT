@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -141,8 +142,11 @@ public class TaskServiceImplementation implements TaskService {
         }
 
         // Sauvegarde les anciennes valeurs avant modification
+        String oldTitle = task.getTaskTitle();
+        String oldDescription = task.getTaskDescription();
         String oldStatus = task.getTaskStatus();
         String oldPriority = task.getTaskPriority();
+        LocalDateTime oldDeadline = task.getTaskDeadline();
 
         // Met à jour les champs si présents
         if (updateRequest.getTaskTitle() != null) task.setTaskTitle(updateRequest.getTaskTitle());
@@ -162,6 +166,15 @@ public class TaskServiceImplementation implements TaskService {
         history.setOldPriority(oldPriority);
         history.setNewPriority(updatedTask.getTaskPriority());
         history.setChangeDescription("Tâche mise à jour par " + user.getEmail());
+
+        history.setOldTitle(oldTitle);
+        history.setNewTitle(updatedTask.getTaskTitle());
+
+        history.setOldDescription(oldDescription);
+        history.setNewDescription(updatedTask.getTaskDescription());
+
+        history.setOldDeadline(oldDeadline);
+        history.setNewDeadline(updatedTask.getTaskDeadline());
 
         if (history.getOldPriority() != null) history.setOldPriority(history.getOldPriority().toUpperCase());
         if (history.getNewPriority() != null) history.setNewPriority(history.getNewPriority().toUpperCase());

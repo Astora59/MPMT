@@ -39,6 +39,63 @@ public class TaskHistory {
     @Column(name = "change_description", columnDefinition = "TEXT")
     private String changeDescription;
 
+    public String getOldTitle() {
+        return oldTitle;
+    }
+
+    public void setOldTitle(String oldTitle) {
+        this.oldTitle = oldTitle;
+    }
+
+    public String getNewTitle() {
+        return newTitle;
+    }
+
+    public void setNewTitle(String newTitle) {
+        this.newTitle = newTitle;
+    }
+
+    public String getOldDescription() {
+        return oldDescription;
+    }
+
+    public void setOldDescription(String oldDescription) {
+        this.oldDescription = oldDescription;
+    }
+
+    public String getNewDescription() {
+        return newDescription;
+    }
+
+    public void setNewDescription(String newDescription) {
+        this.newDescription = newDescription;
+    }
+
+    public LocalDateTime getOldDeadline() {
+        return oldDeadline;
+    }
+
+    public void setOldDeadline(LocalDateTime oldDeadline) {
+        this.oldDeadline = oldDeadline;
+    }
+
+    public LocalDateTime getNewDeadline() {
+        return newDeadline;
+    }
+
+    public void setNewDeadline(LocalDateTime newDeadline) {
+        this.newDeadline = newDeadline;
+    }
+
+    private String oldTitle;
+    private String newTitle;
+
+    private String oldDescription;
+    private String newDescription;
+
+    private LocalDateTime oldDeadline;
+    private LocalDateTime newDeadline;
+
     // Getters et setters
     public UUID getHistoryId() { return historyId; }
     public void setHistoryId(UUID historyId) { this.historyId = historyId; }

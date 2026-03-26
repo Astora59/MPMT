@@ -5,6 +5,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,7 +14,7 @@ public class EmailServiceImplementation implements EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    @Override
+    @Async
     public void sendTaskAssignedEmail(String recipientEmail, String taskTitle, String projectName, String assignedBy) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(recipientEmail);

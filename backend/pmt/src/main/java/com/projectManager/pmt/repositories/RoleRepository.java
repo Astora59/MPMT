@@ -17,5 +17,8 @@ public interface RoleRepository extends JpaRepository<Role, UUID> {
 
 //    Optional<Object> findByUserId(UUID usersId);
 
-    List<Role> findByProject_Project_id(UUID project_id);
+//    List<Role> findByProject_Project_id(UUID project_id);
+
+    @Query("SELECT r FROM Role r WHERE r.project.project_id = :projectId")
+    List<Role> findRolesByProjectId(@Param("projectId") UUID projectId);
 }

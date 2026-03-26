@@ -40,6 +40,27 @@ public class TaskHistoryController {
         return roleRepository.findRoleByUserAndProject(userId, projectId).isPresent();
     }
 
+//    @GetMapping("/{projectId}/tasks/{taskId}/history")
+//    public ResponseEntity<List<TaskHistory>> getTaskHistory(
+//            @PathVariable UUID projectId,
+//            @PathVariable UUID taskId
+//    ) {
+//
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String email = authentication.getName();
+//
+//        Users user = usersRepository.findByEmail(email)
+//                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+//
+//        // Vérifie accès au projet
+//        if (!hasAccess(projectId, user.getUsers_id())) {
+//            return ResponseEntity.status(403).build();
+//        }
+//
+//        List<TaskHistory> history = taskHistoryService.getHistoryByTaskId(taskId);
+//
+//        return ResponseEntity.ok(history);
+//    }
 
 
 }
