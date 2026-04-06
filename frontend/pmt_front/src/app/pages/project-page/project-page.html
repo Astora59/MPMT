@@ -1,34 +1,4 @@
-<!-- <div class="task-form">
 
-  <h3>Créer une tâche</h3>
-
-  <input
-    type="text"
-    placeholder="Titre"
-    [(ngModel)]="newTask.taskTitle"
-  />
-
-  <textarea
-    placeholder="Description"
-    [(ngModel)]="newTask.taskDescription"
-  ></textarea>
-
-  <input
-    type="date"
-    [(ngModel)]="newTask.taskDeadline"
-  />
-
-  <select [(ngModel)]="newTask.taskPriority">
-    <option value="Low">Low</option>
-    <option value="Medium">Medium</option>
-    <option value="High">High</option>
-  </select>
-
-  <button class="btn-primary" (click)="createTask()">
-    Créer
-  </button>
-
-</div> -->
 
 <!-- BOUTON OUVRIR -->
 <button class="btn-primary" (click)="openModal()">
@@ -122,7 +92,7 @@
           }">
           {{ task.taskPriority }}
         </span>
-        <select (change)="assignTask(task, $any($event.target).value)">
+        <select (change)="assignTask(task, $any($event.target).value)" (click)="$event.stopPropagation()">
 
           <option value="">Assigner</option>
 

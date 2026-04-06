@@ -1,18 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { InviteUserModalComponent } from './invite-user-modal';
 
-import { InviteUserModal } from './invite-user-modal';
-
-describe('InviteUserModal', () => {
-  let component: InviteUserModal;
-  let fixture: ComponentFixture<InviteUserModal>;
+describe('InviteUserModalComponent', () => {
+  let component: InviteUserModalComponent;
+  let fixture: ComponentFixture<InviteUserModalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InviteUserModal]
+      imports: [InviteUserModalComponent],
+      providers: [
+      provideRouter([]),
+      provideHttpClient()
+    ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(InviteUserModal);
+    fixture = TestBed.createComponent(InviteUserModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
