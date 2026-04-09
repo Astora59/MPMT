@@ -1,0 +1,66 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      # ---------------- FRONTEND ----------------
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Installer les dépendances Front
+        working-directory: ./frontend/pmt_front
+        run: npm install
+
+      - name: Build Front
+        working-directory: ./frontend/pmt_front
+        run: npm run build
+
+      - name: Test Front
+        working-directory: ./frontend/pmt_front
+        run: npm test -- --watch=false --browsers=ChromeHeadless
+
+      # ---------------- BACKEND ----------------
+      - name: Installer Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Build Back
+        working-directory: ./backend/pmt
+        run: mvn clean install
+
+      - name: Test Back
+        working-directory: ./backend/pmt
+        run: mvn test
+
+      # ---------------- DOCKER ----------------
+      - name: Connexion Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build image Front
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/pmt-front ./frontend/pmt_front
+
+      - name: Push image Front
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/pmt-front
+
+      - name: Build image Back
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/pmt-back ./backend/pmt
+
+      - name: Push image Back
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/pmt-back
