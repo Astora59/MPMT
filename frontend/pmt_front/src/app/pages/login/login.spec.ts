@@ -4,7 +4,8 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { of, throwError } from 'rxjs';
-import { provideRouter } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+
 
 describe('Login Component', () => {
   let component: Login;
@@ -21,7 +22,14 @@ describe('Login Component', () => {
       providers: [
         { provide: AuthService, useValue: authServiceSpy },
         { provide: Router, useValue: routerSpy },
-        provideRouter([])
+                {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {},
+            params: of({}),
+            queryParams: of({})
+          }
+        }
 
       ]
     }).compileComponents();
