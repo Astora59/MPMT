@@ -1,41 +1,33 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Login } from './login';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { of, throwError } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-
 
 describe('Login Component', () => {
   let component: Login;
   let fixture: ComponentFixture<Login>;
   let authServiceSpy: jasmine.SpyObj<AuthService>;
-  let routerSpy: jasmine.SpyObj<Router>;
+  let router: Router;
 
   beforeEach(async () => {
     authServiceSpy = jasmine.createSpyObj('AuthService', ['login']);
-    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
       imports: [Login, FormsModule],
       providers: [
         { provide: AuthService, useValue: authServiceSpy },
-        { provide: Router, useValue: routerSpy },
-                {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {},
-            params: of({}),
-            queryParams: of({})
-          }
-        }
-
+        provideRouter([])
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(Login);
     component = fixture.componentInstance;
+
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
+
     fixture.detectChanges();
   });
 
@@ -71,8 +63,11 @@ describe('Login Component', () => {
     component.onSubmit(fakeForm);
 
     expect(authServiceSpy.login).toHaveBeenCalled();
-    expect(localStorage.setItem).toHaveBeenCalledWith('token', 'fake-token');
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/dashboard']);
+    expect(localStorage.setItem)
+      .toHaveBeenCalledWith('token', 'fake-token');
+
+    expect(router.navigate)
+      .toHaveBeenCalledWith(['/dashboard']);
   });
 
   it('should display error on login failure', () => {
