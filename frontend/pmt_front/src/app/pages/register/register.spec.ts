@@ -1,20 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegisterComponent } from './register';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { of, throwError } from 'rxjs';
-import { provideRouter } from '@angular/router';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
   let authServiceSpy: jasmine.SpyObj<AuthService>;
-  let routerSpy: jasmine.SpyObj<Router>;
+  let router: Router;
 
   beforeEach(async () => {
     authServiceSpy = jasmine.createSpyObj('AuthService', ['register']);
-    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
       imports: [RegisterComponent, FormsModule],
@@ -23,6 +21,9 @@ describe('RegisterComponent', () => {
         provideRouter([])
       ]
     }).compileComponents();
+
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
 
     fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;
@@ -57,7 +58,7 @@ describe('RegisterComponent', () => {
     expect(authServiceSpy.register)
       .toHaveBeenCalledWith(component.form);
 
-    expect(routerSpy.navigate)
+    expect(router.navigate)
       .toHaveBeenCalledWith(['/login']);
   });
 

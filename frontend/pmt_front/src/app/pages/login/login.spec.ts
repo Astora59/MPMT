@@ -20,7 +20,8 @@ describe('Login Component', () => {
       imports: [Login, FormsModule],
       providers: [
         { provide: AuthService, useValue: authServiceSpy },
-        { provide: Router, useValue: routerSpy }
+        { provide: Router, useValue: routerSpy },
+        provideRouter([])
 
       ]
     }).compileComponents();
