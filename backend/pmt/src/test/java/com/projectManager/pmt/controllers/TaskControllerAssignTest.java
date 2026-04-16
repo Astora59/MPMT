@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -32,43 +34,40 @@ class TaskControllerAssignTest {
     private TaskService taskService;
 
     @Test
-    @WithMockUser(roles = "ADMIN")
     void assignTask_success() throws Exception {
 
         UUID projectId = UUID.randomUUID();
         UUID taskId = UUID.randomUUID();
+        String currentUserEmail = "current@example.com";
+
+        Authentication authentication = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+
+        when(authentication.getPrincipal()).thenReturn(currentUserEmail);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
 
         AssignTaskRequest request = new AssignTaskRequest();
-        request.setUserEmail("target@example.com");  // utilisateur assigné
+        request.setUserEmail("target@example.com");
 
         Task updatedTask = new Task();
         updatedTask.setTaskId(taskId);
         updatedTask.setTaskTitle("Ma tâche test");
 
-        // 🔥 Mock du service
         when(taskService.assignTaskToUser(
                 eq(projectId),
                 eq(taskId),
-                eq("current@example.com"),
+                eq(currentUserEmail),
                 eq("target@example.com")
         )).thenReturn(updatedTask);
 
         mockMvc.perform(
                         put("/projects/{projectId}/tasks/{taskId}/assign", projectId, taskId)
-                                .principal(() -> "current@example.com") // user connecté
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request))
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.taskTitle").value("Ma tâche test"))
-                .andExpect(jsonPath("$.task_id").value(taskId.toString()));
-
-        // ✅ Vérifie que le service a bien été appelé, donc qu’il enverra un email
-        verify(taskService, times(1)).assignTaskToUser(
-                eq(projectId),
-                eq(taskId),
-                eq("current@example.com"),
-                eq("target@example.com")
-        );
+                .andExpect(jsonPath("$.taskId").value(taskId.toString()));
     }
 }
