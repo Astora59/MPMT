@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -35,6 +36,7 @@ class TaskControllerGetByStatusTest {
     private SecurityContext securityContext;
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void getTasksByStatus_success() throws Exception {
 
         UUID projectId = UUID.randomUUID();
