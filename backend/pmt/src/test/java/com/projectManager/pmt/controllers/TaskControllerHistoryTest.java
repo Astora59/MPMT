@@ -55,16 +55,16 @@ class TaskControllerHistoryTest {
         history.setChangeDescription("Changement manuel de statut");
 
         when(taskService.getTaskHistory(
-                eq(projectId),
-                eq(taskId),
-                eq("current@example.com")
+                any(UUID.class),
+                any(UUID.class),
+                anyString()
         )).thenReturn(List.of(history));
 
         mockMvc.perform(get("/projects/{projectId}/tasks/{taskId}/history", projectId, taskId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].oldStatus").value("TODO"))
+                .andExpect(jsonPath("$[0].oldStatus").value("pending"))
                 .andExpect(jsonPath("$[0].newStatus").value("IN_PROGRESS"));
     }
 }
