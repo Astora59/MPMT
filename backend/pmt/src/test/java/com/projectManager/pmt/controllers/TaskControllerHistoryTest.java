@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -46,7 +47,7 @@ class TaskControllerHistoryTest {
         SecurityContextHolder.setContext(securityContext);
 
         TaskHistory history = new TaskHistory();
-        history.setOldStatus("TODO");
+        history.setOldStatus("pending");
         history.setNewStatus("IN_PROGRESS");
         history.setOldPriority("LOW");
         history.setNewPriority("HIGH");
@@ -61,6 +62,7 @@ class TaskControllerHistoryTest {
 
         mockMvc.perform(get("/projects/{projectId}/tasks/{taskId}/history", projectId, taskId)
                         .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].oldStatus").value("TODO"))
                 .andExpect(jsonPath("$[0].newStatus").value("IN_PROGRESS"));
