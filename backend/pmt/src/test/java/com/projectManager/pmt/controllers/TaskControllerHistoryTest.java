@@ -55,9 +55,9 @@ class TaskControllerHistoryTest {
         history.setChangeDescription("Changement manuel de statut");
 
         when(taskService.getTaskHistory(
-                any(UUID.class),
-                any(UUID.class),
-                anyString()
+                org.mockito.ArgumentMatchers.any(),
+                org.mockito.ArgumentMatchers.any(),
+                org.mockito.ArgumentMatchers.any()
         )).thenReturn(List.of(history));
 
         mockMvc.perform(get("/projects/{projectId}/tasks/{taskId}/history", projectId, taskId)
