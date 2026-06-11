@@ -3,6 +3,8 @@ package com.projectManager.pmt.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.projectManager.pmt.dto.AssignRoleRequest;
 import com.projectManager.pmt.models.Project;
+import com.projectManager.pmt.repositories.ProjectRepository;
+import com.projectManager.pmt.repositories.UsersRepository;
 import com.projectManager.pmt.services.ProjectService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
@@ -25,10 +28,16 @@ public class ProjectUpdateRoleTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private ProjectService projectService;
 
     @Autowired
+    private ProjectRepository projectRepository;
+
+    @MockitoBean
+    private UsersRepository usersRepository;
+
+    @MockitoBean
     private ObjectMapper objectMapper;
 
     @Test
