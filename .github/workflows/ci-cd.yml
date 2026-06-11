@@ -44,7 +44,7 @@ jobs:
 
       - name: Test Back
         working-directory: ./backend/pmt
-        run: mvn test
+        run: mvn test -e
 
       # ---------------- DOCKER ----------------
       - name: Connexion Docker Hub
