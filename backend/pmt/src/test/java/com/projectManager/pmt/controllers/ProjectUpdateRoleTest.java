@@ -31,13 +31,13 @@ public class ProjectUpdateRoleTest {
     @MockitoBean
     private ProjectService projectService;
 
-    @Autowired
+    @MockitoBean
     private ProjectRepository projectRepository;
 
     @MockitoBean
     private UsersRepository usersRepository;
 
-    @MockitoBean
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Test

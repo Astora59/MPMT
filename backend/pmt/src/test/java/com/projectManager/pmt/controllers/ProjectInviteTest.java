@@ -38,7 +38,7 @@ public class ProjectInviteTest {
     private UsersRepository usersRepository;
 
 
-    @MockitoBean
+    @Autowired
     private ObjectMapper objectMapper;
 
     // ✅ Cas 1 : Invitation réussie
