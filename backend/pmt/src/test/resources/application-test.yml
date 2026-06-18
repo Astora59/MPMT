@@ -17,3 +17,8 @@ spring:
 h2:
   console:
     enabled: true   # ✅ Optionnel, pratique pour debug
+
+
+jwt:
+  secret: TestSecretKeyForTestsOnly12345
+  expiration: 3600000

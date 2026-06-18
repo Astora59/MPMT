@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.projectManager.pmt.controllers.ProjectController;
 import com.projectManager.pmt.dto.ProjectRequest;
 import com.projectManager.pmt.models.Project;
+import com.projectManager.pmt.repositories.ProjectRepository;
+import com.projectManager.pmt.repositories.UsersRepository;
 import com.projectManager.pmt.services.ProjectService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -15,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -34,8 +37,14 @@ public class ProjectControllerTest {
     private MockMvc mockMvc;
     
 
-    @MockBean
+    @MockitoBean
     private ProjectService projectService;
+
+    @MockitoBean
+    private ProjectRepository projectRepository; // ← ajouter
+
+    @MockitoBean
+    private UsersRepository usersRepository;
 
     @Autowired
     private ObjectMapper objectMapper;

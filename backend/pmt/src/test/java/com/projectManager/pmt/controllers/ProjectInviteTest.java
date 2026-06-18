@@ -31,11 +31,12 @@ public class ProjectInviteTest {
     @MockitoBean
     private ProjectService projectService;
 
-    @Autowired
-    private ProjectRepository projectRepository;
+    @MockitoBean
+    private ProjectRepository projectRepository; // ← ajouter
 
     @MockitoBean
     private UsersRepository usersRepository;
+
 
     @MockitoBean
     private ObjectMapper objectMapper;
