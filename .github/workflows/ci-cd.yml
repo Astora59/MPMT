@@ -46,6 +46,12 @@ jobs:
         working-directory: ./backend/pmt
         run: mvn test -e
 
+      
+      - name: Afficher les rapports de test en cas d'échec
+        if: failure()
+        working-directory: ./backend/pmt
+        run: cat target/surefire-reports/*.txt
+
       # ---------------- DOCKER ----------------
       - name: Connexion Docker Hub
         uses: docker/login-action@v3
