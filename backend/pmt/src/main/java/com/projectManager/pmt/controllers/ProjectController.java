@@ -33,16 +33,15 @@ public class ProjectController {
     private UsersRepository usersRepository;
 
     @PostMapping("/create")
-    public ResponseEntity<Project> createProject(@RequestBody ProjectRequest projectRequest) {
-
-        // Récupérer les infos du user connecté
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        String email = (String) authentication.getPrincipal();
-
-
-        Project newProject = projectService.createProject(projectRequest, email);
-        return ResponseEntity.ok(newProject);
+    public ResponseEntity<?> createProject(@RequestBody ProjectRequest projectRequest) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String email = (String) authentication.getPrincipal();
+            Project newProject = projectService.createProject(projectRequest, email);
+            return ResponseEntity.ok(newProject);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
 //    @PostMapping("/{projectId}/invite")
