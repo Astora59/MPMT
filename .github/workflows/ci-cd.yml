@@ -47,6 +47,12 @@ jobs:
         run: mvn test -e
 
       
+      - name: Show failing tests
+        if: always()
+        working-directory: ./backend/pmt
+        run: |
+          grep -R "Failures:\|Errors:" target/surefire-reports || true
+
         
       - name: Afficher les rapports de test en cas d'échec
         if: failure()
