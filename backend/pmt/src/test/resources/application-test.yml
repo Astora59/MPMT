@@ -20,5 +20,5 @@ h2:
 
 
 jwt:
-  secret: TestSecretKeyForTestsOnly12345
+  secret: TestSecretKeyForTestsOnly123456789
   expiration: 3600000
