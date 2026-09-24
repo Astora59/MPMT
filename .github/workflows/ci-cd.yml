@@ -2,78 +2,105 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  build-test-deploy:
+  # ---------------- BACKEND ----------------
+  backend:
+    name: Backend - build, tests et couverture
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ./backend/pmt
     steps:
       - name: Récupérer le code
         uses: actions/checkout@v4
 
-      # ---------------- FRONTEND ----------------
-      - name: Installer Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Installer les dépendances Front
-        working-directory: ./frontend/pmt_front
-        run: npm install
-
-      - name: Build Front
-        working-directory: ./frontend/pmt_front
-        run: npm run build
-
-      - name: Test Front
-        working-directory: ./frontend/pmt_front
-        run: npm test -- --watch=false --no-progress --code-coverage --browsers=ChromeHeadless
-
-      # ---------------- BACKEND ----------------
-      - name: Installer Java
+      - name: Installer Java 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
+          cache: maven
 
-      - name: Build Back
-        working-directory: ./backend/pmt
-        run: mvn clean install
+      # verify = compile + tests + rapport JaCoCo + contrôle du seuil
+      - name: Build, tests et couverture
+        run: mvn -B verify
 
-      - name: Test Back
-        working-directory: ./backend/pmt
-        run: mvn test -e
-
-      
-      - name: Show failing tests
+      - name: Publier le rapport de couverture
         if: always()
-        working-directory: ./backend/pmt
-        run: |
-          grep -R "Failures:\|Errors:" target/surefire-reports || true
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: backend/pmt/target/site/jacoco
+          if-no-files-found: warn
 
-        
-      - name: Afficher les rapports de test en cas d'échec
+      - name: Publier les rapports de tests en cas d'échec
         if: failure()
-        working-directory: ./backend/pmt
-        run: cat target/surefire-reports/*.txt
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-surefire-reports
+          path: backend/pmt/target/surefire-reports
 
-      # ---------------- DOCKER ----------------
+  # ---------------- FRONTEND ----------------
+  frontend:
+    name: Frontend - tests, couverture et build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend/pmt_front
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/pmt_front/package-lock.json
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Tests et couverture
+        run: npm test -- --watch=false --no-progress --code-coverage --browsers=ChromeHeadless
+
+      - name: Build de production
+        run: npm run build -- --configuration production
+
+      - name: Publier le rapport de couverture
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage
+          path: frontend/pmt_front/coverage
+          if-no-files-found: warn
+
+  # ---------------- DOCKER ----------------
+  docker:
+    name: Build et push des images Docker
+    needs: [backend, frontend]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
       - name: Connexion Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build image Front
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/pmt-front ./frontend/pmt_front
+      - name: Image backend
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/pmt-back:latest ./backend/pmt
+          docker push ${{ secrets.DOCKER_USERNAME }}/pmt-back:latest
 
-      - name: Push image Front
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/pmt-front
-
-      - name: Build image Back
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/pmt-back ./backend/pmt
-
-      - name: Push image Back
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/pmt-back
+      - name: Image frontend
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/pmt-front:latest ./frontend/pmt_front
+          docker push ${{ secrets.DOCKER_USERNAME }}/pmt-front:latest
