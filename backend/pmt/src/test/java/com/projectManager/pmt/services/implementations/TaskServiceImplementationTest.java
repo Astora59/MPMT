@@ -115,6 +115,17 @@ class TaskServiceImplementationTest {
         return task;
     }
 
+    /**
+     * Enregistre une tâche appartenant au projet donné dans le repository.
+     * La tâche est construite AVANT le when(...) : appeler taskOfProject(...)
+     * dans l'argument de thenReturn(...) provoque une UnfinishedStubbingException,
+     * car taskOfProject() crée lui-même un stubbing.
+     */
+    private void taskExistsInProject(UUID ownerProjectId) {
+        Task task = taskOfProject(ownerProjectId);
+        when(taskRepository.findById(taskId)).thenReturn(Optional.of(task));
+    }
+
     private static void assertFails(String expectedMessagePart, Executable action) {
         RuntimeException ex = assertThrows(RuntimeException.class, action);
         assertTrue(ex.getMessage().contains(expectedMessagePart), "Message reçu : " + ex.getMessage());
@@ -265,7 +276,7 @@ class TaskServiceImplementationTest {
         roleIs("member");
         when(roleRepository.findRoleByUserAndProject(targetId, projectId))
                 .thenReturn(Optional.of(mock(Role.class)));
-        when(taskRepository.findById(taskId)).thenReturn(Optional.of(taskOfProject(UUID.randomUUID())));
+        taskExistsInProject(UUID.randomUUID());
 
         assertFails("n'appartient pas",
                 () -> service.assignTaskToUser(projectId, taskId, EMAIL, TARGET_EMAIL));
@@ -392,7 +403,7 @@ class TaskServiceImplementationTest {
         projectExists();
         userExists();
         userIsProjectAdmin();
-        when(taskRepository.findById(taskId)).thenReturn(Optional.of(taskOfProject(UUID.randomUUID())));
+        taskExistsInProject(UUID.randomUUID());
 
         assertFails("n'appartient pas",
                 () -> service.updateTask(projectId, taskId, EMAIL, mock(TaskUpdateRequest.class)));
@@ -459,7 +470,7 @@ class TaskServiceImplementationTest {
         projectExists();
         userExists();
         userIsProjectAdmin();
-        when(taskRepository.findById(taskId)).thenReturn(Optional.of(taskOfProject(UUID.randomUUID())));
+        taskExistsInProject(UUID.randomUUID());
 
         assertFails("n'appartient pas", () -> service.getTaskById(projectId, taskId, EMAIL));
     }
@@ -519,7 +530,7 @@ class TaskServiceImplementationTest {
         userExists();
         projectExists();
         roleIs("member");
-        when(taskRepository.findById(taskId)).thenReturn(Optional.of(taskOfProject(projectId)));
+        taskExistsInProject(projectId);
         List<TaskHistory> history = List.of(new TaskHistory());
         when(taskHistoryRepository.findByTask_TaskId(taskId)).thenReturn(history);
 
@@ -550,7 +561,7 @@ class TaskServiceImplementationTest {
     void getTaskHistory_throws_whenTaskBelongsToAnotherProject() {
         userExists();
         projectExists();
-        when(taskRepository.findById(taskId)).thenReturn(Optional.of(taskOfProject(UUID.randomUUID())));
+        taskExistsInProject(UUID.randomUUID());
 
         assertFails("n'appartient pas", () -> service.getTaskHistory(projectId, taskId, EMAIL));
     }
@@ -559,7 +570,7 @@ class TaskServiceImplementationTest {
     void getTaskHistory_throws_whenUserIsNotMember() {
         userExists();
         projectExists();
-        when(taskRepository.findById(taskId)).thenReturn(Optional.of(taskOfProject(projectId)));
+        taskExistsInProject(projectId);
 
         assertFails("Accès refusé", () -> service.getTaskHistory(projectId, taskId, EMAIL));
     }
